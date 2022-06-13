@@ -1,12 +1,12 @@
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-use sdl2::rect::{Point, Rect};
+use sdl2::rect::Rect;
 use std::time::Duration;
 
 const TITLE: &str = "App";
-const HEIGHT: u32 = 600;
-const WIDTH: u32 = 800;
+const HEIGHT: u32 = 800;
+const WIDTH: u32 = 600;
 
 fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
@@ -41,11 +41,17 @@ fn main() -> Result<(), String> {
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
 
+        let min_dimention = HEIGHT.min(WIDTH);
+
+        let start_width = (WIDTH - min_dimention) as i32 / 2;
+        let start_height = (HEIGHT - min_dimention) as i32 / 2;
+
         canvas.set_draw_color(Color::RGB(255, 0, 0));
-        canvas.fill_rect(Rect::from_center(
-            Point::new(WIDTH as i32 / 2, HEIGHT as i32 / 2),
-            100,
-            100,
+        canvas.fill_rect(Rect::new(
+            start_width,
+            start_height,
+            min_dimention,
+            min_dimention,
         ))?;
         canvas.present();
 
