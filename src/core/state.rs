@@ -1,4 +1,4 @@
-enum Chessman {
+pub enum Chessman {
     Rook,
     Knight,
     Bishop,
@@ -7,7 +7,7 @@ enum Chessman {
     Pawn,
 }
 
-enum Side {
+pub enum Side {
     White,
     Black,
 }
@@ -32,12 +32,30 @@ impl State {
                     Some((Chessman::Knight, Side::Black)),
                     Some((Chessman::Rook, Side::Black)),
                 ],
+                [
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                    Some((Chessman::Pawn, Side::Black)),
+                ],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None],
+                [
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                    Some((Chessman::Pawn, Side::White)),
+                ],
                 [
                     Some((Chessman::Rook, Side::White)),
                     Some((Chessman::Knight, Side::White)),

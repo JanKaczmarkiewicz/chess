@@ -1,12 +1,12 @@
 use std::time::Duration;
 
-use crate::core::state::State;
+use crate::core::state::{Chessman, Side, State};
 use sdl2::event::Event;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
-use sdl2::render::{Canvas, Texture, TextureCreator};
+use sdl2::render::{Canvas, TextureCreator};
 use sdl2::video::{Window, WindowContext};
 use sdl2::Sdl;
 
@@ -36,7 +36,7 @@ impl Renderer {
             .build()
             .unwrap();
 
-        let mut canvas = window.into_canvas().build().unwrap();
+        let canvas = window.into_canvas().build().unwrap();
 
         let texture_creator = canvas.texture_creator();
 
@@ -45,11 +45,6 @@ impl Renderer {
             canvas,
             sdl_context,
         });
-    }
-
-    fn load_texture(self: &Self, name: &str) -> Result<Texture, String> {
-        self.texture_creator
-            .load_texture(format!("./images/${}.png", name))
     }
 
     pub fn update(self: &mut Self, state: State) -> Result<(), String> {
@@ -71,10 +66,10 @@ impl Renderer {
                 let white = Color::RGB(235, 236, 208);
                 let black = Color::RGB(119, 149, 86);
 
-                let color = if (i + j) % 2 == 0 { black } else { white };
+                let color = if (i + j) % 2 == 0 { white } else { black };
 
-                let x_start = start_width + (tile_size * i as u32);
-                let y_start = start_height + (tile_size * j as u32);
+                let x_start = start_width + (tile_size * j as u32);
+                let y_start = start_height + (tile_size * i as u32);
 
                 let rect = Rect::new(x_start as i32, y_start as i32, tile_size, tile_size);
 
@@ -82,9 +77,25 @@ impl Renderer {
                 self.canvas.fill_rect(rect)?;
 
                 if let Some((chessman, side)) = tile {
+                    let side_part = match side {
+                        Side::White => "w",
+                        Side::Black => "b",
+                    };
+
+                    let chessman_part = match chessman {
+                        Chessman::Bishop => "b",
+                        Chessman::Queen => "q",
+                        Chessman::King => "k",
+                        Chessman::Knight => "n",
+                        Chessman::Rook => "r",
+                        Chessman::Pawn => "p",
+                    };
+
+                    let filename = format!("{side_part}{chessman_part}");
+
                     let texture = self
                         .texture_creator
-                        .load_texture(format!("./images/${}.png", "br"))?;
+                        .load_texture(format!("./images/{}.png", filename))?;
                     self.canvas.copy(&texture, None, rect)?;
                 }
             }
@@ -95,7 +106,7 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn wait_for_input(self: &Self, state: ()) -> Result<(), String> {
+    pub fn wait_for_input(self: &Self, _state: ()) -> Result<(), String> {
         let mut event_pump = self.sdl_context.event_pump()?;
 
         'running: loop {
