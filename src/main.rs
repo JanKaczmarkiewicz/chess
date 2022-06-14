@@ -1,63 +1,17 @@
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-use sdl2::pixels::Color;
-use sdl2::rect::Rect;
-use std::time::Duration;
+mod core;
+mod render;
 
-const TITLE: &str = "App";
-const HEIGHT: u32 = 800;
-const WIDTH: u32 = 600;
+use crate::core::state::State;
+
+use render::Renderer;
 
 fn main() -> Result<(), String> {
-    let sdl_context = sdl2::init()?;
-    let video_subsystem = sdl_context.video()?;
+    let renderer = Renderer::new()?;
+    let state = State::new();
 
-    let window = video_subsystem
-        .window(TITLE, WIDTH, HEIGHT)
-        .position_centered()
-        .build()
-        .unwrap();
+    loop {}
 
-    let mut canvas = window.into_canvas().build().unwrap();
-
-    let mut event_pump = sdl_context.event_pump()?;
-
-    'running: loop {
-        // Handle events
-        for event in event_pump.poll_iter() {
-            match event {
-                Event::Quit { .. }
-                | Event::KeyDown {
-                    keycode: Some(Keycode::Escape),
-                    ..
-                } => {
-                    break 'running;
-                }
-                _ => {}
-            }
-        }
-
-        // Render
-        canvas.set_draw_color(Color::RGB(0, 0, 0));
-        canvas.clear();
-
-        let min_dimention = HEIGHT.min(WIDTH);
-
-        let start_width = (WIDTH - min_dimention) as i32 / 2;
-        let start_height = (HEIGHT - min_dimention) as i32 / 2;
-
-        canvas.set_draw_color(Color::RGB(255, 0, 0));
-        canvas.fill_rect(Rect::new(
-            start_width,
-            start_height,
-            min_dimention,
-            min_dimention,
-        ))?;
-        canvas.present();
-
-        // Time management!
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
-    }
+    renderer.update(state)?;
 
     Ok(())
 }
