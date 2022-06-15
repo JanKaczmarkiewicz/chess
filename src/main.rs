@@ -6,11 +6,14 @@ use render::Renderer;
 
 fn main() -> Result<(), String> {
     let mut renderer = Renderer::new()?;
-    let state = State::new();
+    let mut state = State::new();
 
-    renderer.update(state)?;
+    renderer.update(&state)?;
 
-    renderer.wait_for_input(())?;
+    for input in renderer.input_iter()? {
+        state.handle_action(input);
+        renderer.update(&state)?;
+    }
 
     Ok(())
 }

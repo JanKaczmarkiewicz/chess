@@ -8,7 +8,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::{Canvas, TextureCreator};
 use sdl2::video::{Window, WindowContext};
-use sdl2::Sdl;
+use sdl2::{EventPump, Sdl};
 
 const TITLE: &str = "App";
 const HEIGHT: u32 = 800;
@@ -17,9 +17,56 @@ const WIDTH: u32 = 800;
 const BOARD_SIZE: usize = 8;
 
 pub struct Renderer {
-    sdl_context: Sdl,
     canvas: Canvas<Window>,
+    sdl_context: Sdl,
     texture_creator: TextureCreator<WindowContext>,
+}
+
+pub struct Input<'a> {
+    event_pump: EventPump,
+    canvas: &'a Canvas<Window>,
+}
+
+impl Iterator for Input<'_> {
+    type Item = (usize, usize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            for event in self.event_pump.poll_iter() {
+                match event {
+                    Event::Quit { .. }
+                    | Event::KeyDown {
+                        keycode: Some(Keycode::Escape),
+                        ..
+                    } => {
+                        return None;
+                    }
+                    Event::MouseButtonDown { x, y, .. } => {
+                        let height = self.canvas.viewport().height() as i32;
+                        let width = self.canvas.viewport().width() as i32;
+
+                        let min_dimention = height.min(width);
+
+                        let start_width = (width - min_dimention) / 2;
+                        let start_height = (height - min_dimention) / 2;
+
+                        let normalized_x = x - start_width;
+                        let normalized_y = y - start_height;
+
+                        if normalized_x > 0
+                            && normalized_x < width
+                            && normalized_y > 0
+                            && normalized_y < height
+                        {
+                            return Some((normalized_x as usize, normalized_y as usize));
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        }
+    }
 }
 
 impl Renderer {
@@ -47,7 +94,7 @@ impl Renderer {
         });
     }
 
-    pub fn update(self: &mut Self, state: State) -> Result<(), String> {
+    pub fn update(self: &mut Self, state: &State) -> Result<(), String> {
         self.canvas.set_draw_color(Color::RGB(19, 16, 17));
         self.canvas.clear();
 
@@ -106,26 +153,12 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn wait_for_input(self: &Self, _state: ()) -> Result<(), String> {
-        let mut event_pump = self.sdl_context.event_pump()?;
+    pub fn input_iter(self: &Self) -> Result<Input, String> {
+        let event_pump = self.sdl_context.event_pump()?;
 
-        'running: loop {
-            for event in event_pump.poll_iter() {
-                match event {
-                    Event::Quit { .. }
-                    | Event::KeyDown {
-                        keycode: Some(Keycode::Escape),
-                        ..
-                    } => {
-                        break 'running;
-                    }
-                    _ => {}
-                }
-            }
-            // Time management!
-            ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
-        }
-
-        Ok(())
+        Ok(Input {
+            canvas: &self.canvas,
+            event_pump,
+        })
     }
 }

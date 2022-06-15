@@ -69,4 +69,6 @@ impl State {
             ],
         }
     }
+
+    pub fn handle_action(self: &mut Self, (x, y): (usize, usize)) {}
 }
