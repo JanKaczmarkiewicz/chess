@@ -7,6 +7,7 @@ pub enum Chessman {
     Pawn,
 }
 
+#[derive(Eq, PartialEq)]
 pub enum Side {
     White,
     Black,
@@ -16,11 +17,17 @@ const BOARD_SIZE: usize = 8;
 
 pub struct State {
     pub board: [[Option<(Chessman, Side)>; BOARD_SIZE]; BOARD_SIZE],
+    pub selected_tile: Option<(usize, usize)>,
+    pub current_side: Side,
+    pub possible_moves: Vec<(usize, usize)>,
 }
 
 impl State {
     pub fn new() -> Self {
         Self {
+            current_side: Side::White,
+            selected_tile: None,
+            possible_moves: vec![],
             board: [
                 [
                     Some((Chessman::Rook, Side::Black)),
@@ -70,5 +77,11 @@ impl State {
         }
     }
 
-    pub fn handle_action(self: &mut Self, (x, y): (usize, usize)) {}
+    pub fn handle_action(&mut self, (x, y): (usize, usize)) {
+        if let Some((chessman, side)) = &self.board[y][x] {
+            if side == &self.current_side {
+                self.selected_tile = Some((x, y));
+            }
+        };
+    }
 }

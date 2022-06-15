@@ -10,7 +10,7 @@ fn main() -> Result<(), String> {
 
     renderer.update(&state)?;
 
-    for input in renderer.input_iter()? {
+    while let Some(input) = renderer.get_next_input() {
         state.handle_action(input);
         renderer.update(&state)?;
     }

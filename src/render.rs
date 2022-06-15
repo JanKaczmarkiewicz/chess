@@ -8,7 +8,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::{Canvas, TextureCreator};
 use sdl2::video::{Window, WindowContext};
-use sdl2::{EventPump, Sdl};
+use sdl2::EventPump;
 
 const TITLE: &str = "App";
 const HEIGHT: u32 = 800;
@@ -18,55 +18,8 @@ const BOARD_SIZE: usize = 8;
 
 pub struct Renderer {
     canvas: Canvas<Window>,
-    sdl_context: Sdl,
-    texture_creator: TextureCreator<WindowContext>,
-}
-
-pub struct Input<'a> {
     event_pump: EventPump,
-    canvas: &'a Canvas<Window>,
-}
-
-impl Iterator for Input<'_> {
-    type Item = (usize, usize);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            for event in self.event_pump.poll_iter() {
-                match event {
-                    Event::Quit { .. }
-                    | Event::KeyDown {
-                        keycode: Some(Keycode::Escape),
-                        ..
-                    } => {
-                        return None;
-                    }
-                    Event::MouseButtonDown { x, y, .. } => {
-                        let height = self.canvas.viewport().height() as i32;
-                        let width = self.canvas.viewport().width() as i32;
-
-                        let min_dimention = height.min(width);
-
-                        let start_width = (width - min_dimention) / 2;
-                        let start_height = (height - min_dimention) / 2;
-
-                        let normalized_x = x - start_width;
-                        let normalized_y = y - start_height;
-
-                        if normalized_x > 0
-                            && normalized_x < width
-                            && normalized_y > 0
-                            && normalized_y < height
-                        {
-                            return Some((normalized_x as usize, normalized_y as usize));
-                        }
-                    }
-                    _ => {}
-                }
-            }
-            ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
-        }
-    }
+    texture_creator: TextureCreator<WindowContext>,
 }
 
 impl Renderer {
@@ -87,14 +40,16 @@ impl Renderer {
 
         let texture_creator = canvas.texture_creator();
 
+        let event_pump = sdl_context.event_pump()?;
+
         return Ok(Self {
             texture_creator,
             canvas,
-            sdl_context,
+            event_pump,
         });
     }
 
-    pub fn update(self: &mut Self, state: &State) -> Result<(), String> {
+    pub fn update(&mut self, state: &State) -> Result<(), String> {
         self.canvas.set_draw_color(Color::RGB(19, 16, 17));
         self.canvas.clear();
 
@@ -108,20 +63,27 @@ impl Renderer {
 
         let tile_size = min_dimention / BOARD_SIZE as u32;
 
-        for (i, row) in state.board.iter().enumerate() {
-            for (j, tile) in row.iter().enumerate() {
+        for (y, row) in state.board.iter().enumerate() {
+            for (x, tile) in row.iter().enumerate() {
                 let white = Color::RGB(235, 236, 208);
                 let black = Color::RGB(119, 149, 86);
 
-                let color = if (i + j) % 2 == 0 { white } else { black };
+                let color = if (y + x) % 2 == 0 { white } else { black };
 
-                let x_start = start_width + (tile_size * j as u32);
-                let y_start = start_height + (tile_size * i as u32);
+                let x_start = start_width + (tile_size * x as u32);
+                let y_start = start_height + (tile_size * y as u32);
 
                 let rect = Rect::new(x_start as i32, y_start as i32, tile_size, tile_size);
 
                 self.canvas.set_draw_color(color);
                 self.canvas.fill_rect(rect)?;
+
+                if let Some(selected_tile) = state.selected_tile {
+                    if (x, y) == selected_tile {
+                        self.canvas.set_draw_color(Color::RGB(0, 236, 208));
+                        self.canvas.draw_rect(rect)?;
+                    }
+                }
 
                 if let Some((chessman, side)) = tile {
                     let side_part = match side {
@@ -153,12 +115,46 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn input_iter(self: &Self) -> Result<Input, String> {
-        let event_pump = self.sdl_context.event_pump()?;
+    pub fn get_next_input(&mut self) -> Option<(usize, usize)> {
+        loop {
+            for event in self.event_pump.poll_iter() {
+                match event {
+                    Event::Quit { .. }
+                    | Event::KeyDown {
+                        keycode: Some(Keycode::Escape),
+                        ..
+                    } => {
+                        return None;
+                    }
+                    Event::MouseButtonDown { x, y, .. } => {
+                        let height = self.canvas.viewport().height() as i32;
+                        let width = self.canvas.viewport().width() as i32;
 
-        Ok(Input {
-            canvas: &self.canvas,
-            event_pump,
-        })
+                        let min_dimention = height.min(width);
+
+                        let tile_size = min_dimention / BOARD_SIZE as i32;
+
+                        let start_width = (width - min_dimention) / 2;
+                        let start_height = (height - min_dimention) / 2;
+
+                        let normalized_x = x - start_width;
+                        let normalized_y = y - start_height;
+
+                        if normalized_x > 0
+                            && normalized_x < width
+                            && normalized_y > 0
+                            && normalized_y < height
+                        {
+                            return Some((
+                                (normalized_x as f32 / tile_size as f32).floor() as usize,
+                                (normalized_y as f32 / tile_size as f32).floor() as usize,
+                            ));
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        }
     }
 }
