@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::core::state::{Chessman, Side, State};
+use crate::core::state::{Chessman, PossibleMoveKind, Side, State};
 use sdl2::event::Event;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
@@ -85,6 +85,20 @@ impl Renderer {
                     }
                 }
 
+                if let Some(possible_move) =
+                    state.possible_moves.iter().find(|m| m.coordinate == (x, y))
+                {
+                    if possible_move.kind == PossibleMoveKind::Move {
+                        self.canvas.set_draw_color(Color::RGB(0, 0, 208));
+                        self.canvas.draw_rect(rect)?;
+                    }
+
+                    if possible_move.kind == PossibleMoveKind::Capture {
+                        self.canvas.set_draw_color(Color::RGB(0, 236, 0));
+                        self.canvas.draw_rect(rect)?;
+                    }
+                }
+
                 if let Some((chessman, side)) = tile {
                     let side_part = match side {
                         Side::White => "w",
@@ -115,7 +129,7 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn get_next_input(&mut self) -> Option<(usize, usize)> {
+    pub fn get_next_input(&mut self) -> Option<(i32, i32)> {
         loop {
             for event in self.event_pump.poll_iter() {
                 match event {
@@ -146,8 +160,8 @@ impl Renderer {
                             && normalized_y < height
                         {
                             return Some((
-                                (normalized_x as f32 / tile_size as f32).floor() as usize,
-                                (normalized_y as f32 / tile_size as f32).floor() as usize,
+                                (normalized_x as f32 / tile_size as f32).floor() as i32,
+                                (normalized_y as f32 / tile_size as f32).floor() as i32,
                             ));
                         }
                     }
