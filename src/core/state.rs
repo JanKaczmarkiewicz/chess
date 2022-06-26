@@ -40,16 +40,39 @@ impl State {
     }
 
     pub fn handle_action(&mut self, input: (i32, i32)) {
-        self.possible_moves = vec![];
+        let coordinate = (input.0 as usize, input.1 as usize);
+
+        if let Some(selected_tile) = self.selected_tile {
+            let is_possible_move = self
+                .possible_moves
+                .iter()
+                .find(|x| coordinate == x.coordinate)
+                .is_some();
+
+            if is_possible_move {
+                self.board.make_move(selected_tile, coordinate);
+                self.current_side = match self.current_side {
+                    Side::White => Side::Black,
+                    Side::Black => Side::White,
+                };
+            }
+
+            self.selected_tile = None;
+            self.possible_moves = vec![];
+
+            return;
+        }
 
         if let Some(chessman) = self.board.get_tile(input) {
             if chessman.get_side() == &self.current_side {
                 self.possible_moves = chessman.get_possible_moves(&self.board, input);
-                self.selected_tile = Some((input.0 as usize, input.1 as usize));
+                self.selected_tile = Some(coordinate);
 
                 return;
             }
         };
+
         self.selected_tile = None;
+        self.possible_moves = vec![];
     }
 }

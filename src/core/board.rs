@@ -45,7 +45,7 @@ impl Board {
                     None,
                     Some(Box::new(Pawn::new(Side::White))),
                     None,
-                    None,
+                    Some(Box::new(King { side: Side::Black })),
                     None,
                 ],
                 [
@@ -95,6 +95,11 @@ impl Board {
 
     pub fn get_board_size(&self) -> usize {
         self.tiles.len()
+    }
+
+    pub fn make_move(&mut self, from: (usize, usize), to: (usize, usize)) {
+        let from_chessman = self.tiles[from.1][from.0].take();
+        self.tiles[to.1][to.0] = from_chessman;
     }
 
     pub fn is_coordinate_in_board((x, y): (i32, i32)) -> bool {
