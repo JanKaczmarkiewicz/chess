@@ -1,6 +1,7 @@
 use std::time::Duration;
 
-use crate::core::state::{Chessman, PossibleMoveKind, Side, State};
+use crate::core::chessman::chessman::ChessmanKind;
+use crate::core::state::{PossibleMoveKind, Side, State};
 use sdl2::event::Event;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
@@ -63,7 +64,7 @@ impl Renderer {
 
         let tile_size = min_dimention / BOARD_SIZE as u32;
 
-        for (y, row) in state.board.iter().enumerate() {
+        for (y, row) in state.get_board().iter().enumerate() {
             for (x, tile) in row.iter().enumerate() {
                 let white = Color::RGB(235, 236, 208);
                 let black = Color::RGB(119, 149, 86);
@@ -99,19 +100,19 @@ impl Renderer {
                     }
                 }
 
-                if let Some((chessman, side)) = tile {
-                    let side_part = match side {
+                if let Some(chessman) = tile {
+                    let side_part = match chessman.get_side() {
                         Side::White => "w",
                         Side::Black => "b",
                     };
 
-                    let chessman_part = match chessman {
-                        Chessman::Bishop => "b",
-                        Chessman::Queen => "q",
-                        Chessman::King => "k",
-                        Chessman::Knight => "n",
-                        Chessman::Rook => "r",
-                        Chessman::Pawn => "p",
+                    let chessman_part = match chessman.get_kind() {
+                        ChessmanKind::Bishop => "b",
+                        ChessmanKind::Queen => "q",
+                        ChessmanKind::King => "k",
+                        ChessmanKind::Knight => "n",
+                        ChessmanKind::Rook => "r",
+                        ChessmanKind::Pawn => "p",
                     };
 
                     let filename = format!("{side_part}{chessman_part}");
