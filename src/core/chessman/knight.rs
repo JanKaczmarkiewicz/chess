@@ -9,27 +9,29 @@ pub struct Knight {
 }
 
 impl Chessman for Knight {
+    fn handle_move(&mut self) {}
+
     fn get_side(&self) -> &Side {
-        return &self.side;
+        &self.side
     }
 
     fn get_kind(&self) -> ChessmanKind {
-        return ChessmanKind::Knight;
+        ChessmanKind::Knight
     }
 
     fn get_possible_moves(&self, board: &Board, (x, y): (i32, i32)) -> Vec<PossibleMove> {
-        let directions = [
-            (-1, 2),
-            (-1, -2),
-            (1, 2),
-            (1, -2),
-            (2, 1),
-            (2, -1),
-            (-2, 1),
-            (-2, -1),
-        ];
+        if board.get_tile((x, y)).is_some() {
+            let directions = [
+                (-1, 2),
+                (-1, -2),
+                (1, 2),
+                (1, -2),
+                (2, 1),
+                (2, -1),
+                (-2, 1),
+                (-2, -1),
+            ];
 
-        if let Some(chessman) = board.get_tile((x, y)) {
             let mut possible_moves = vec![];
 
             for (x_mod, y_mod) in directions {
@@ -40,7 +42,7 @@ impl Chessman for Knight {
                 }
 
                 if let Some(current_chessman) = board.get_tile(pos) {
-                    if chessman.get_side() != current_chessman.get_side() {
+                    if self.get_side() != current_chessman.get_side() {
                         possible_moves.push(PossibleMove {
                             kind: PossibleMoveKind::Capture,
                             coordinate: (pos.0 as usize, pos.1 as usize),
@@ -57,6 +59,6 @@ impl Chessman for Knight {
             return possible_moves;
         }
 
-        return vec![];
+        vec![]
     }
 }

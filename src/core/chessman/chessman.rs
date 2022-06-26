@@ -11,6 +11,7 @@ pub enum ChessmanKind {
 }
 
 pub trait Chessman {
+    fn handle_move(&mut self) -> ();
     fn get_side(&self) -> &Side;
     fn get_kind(&self) -> ChessmanKind;
     fn get_possible_moves(&self, board: &Board, position: (i32, i32)) -> Vec<PossibleMove>;

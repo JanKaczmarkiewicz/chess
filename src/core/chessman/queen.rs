@@ -11,11 +11,13 @@ pub struct Queen {
 
 impl Chessman for Queen {
     fn get_side(&self) -> &Side {
-        return &self.side;
+        &self.side
     }
 
+    fn handle_move(&mut self) {}
+
     fn get_kind(&self) -> ChessmanKind {
-        return ChessmanKind::Queen;
+        ChessmanKind::Queen
     }
 
     fn get_possible_moves(&self, board: &Board, position: (i32, i32)) -> Vec<PossibleMove> {

@@ -10,11 +10,13 @@ pub struct King {
 
 impl Chessman for King {
     fn get_side(&self) -> &Side {
-        return &self.side;
+        &self.side
     }
 
+    fn handle_move(&mut self) {}
+
     fn get_kind(&self) -> ChessmanKind {
-        return ChessmanKind::King;
+        ChessmanKind::King
     }
 
     fn get_possible_moves(&self, board: &Board, position: (i32, i32)) -> Vec<PossibleMove> {

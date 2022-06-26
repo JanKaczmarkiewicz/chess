@@ -43,11 +43,11 @@ impl Renderer {
 
         let event_pump = sdl_context.event_pump()?;
 
-        return Ok(Self {
+        Ok(Self {
             texture_creator,
             canvas,
             event_pump,
-        });
+        })
     }
 
     pub fn update(&mut self, state: &State) -> Result<(), String> {

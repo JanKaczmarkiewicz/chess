@@ -43,5 +43,5 @@ pub fn get_direction_possible_movies(
         return possible_moves;
     }
 
-    return vec![];
+    vec![]
 }

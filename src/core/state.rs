@@ -28,7 +28,7 @@ pub struct State {
 impl State {
     pub fn new() -> Self {
         Self {
-            current_side: Side::White,
+            current_side: Side::Black,
             selected_tile: None,
             possible_moves: vec![],
             board: Board::new(),

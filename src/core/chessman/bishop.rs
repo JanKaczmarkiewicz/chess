@@ -10,12 +10,14 @@ pub struct Bishop {
 }
 
 impl Chessman for Bishop {
+    fn handle_move(&mut self) {}
+
     fn get_side(&self) -> &Side {
-        return &self.side;
+        &self.side
     }
 
     fn get_kind(&self) -> ChessmanKind {
-        return ChessmanKind::Bishop;
+        ChessmanKind::Bishop
     }
 
     fn get_possible_moves(&self, board: &Board, position: (i32, i32)) -> Vec<PossibleMove> {

@@ -16,7 +16,7 @@ pub struct Board {
 
 impl Board {
     pub fn new() -> Self {
-        return Self {
+        Self {
             tiles: [
                 [
                     Some(Box::new(Rook { side: Side::Black })),
@@ -29,19 +29,28 @@ impl Board {
                     Some(Box::new(Rook { side: Side::Black })),
                 ],
                 [
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
-                    Some(Box::new(Pawn { side: Side::Black })),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
+                    Some(Box::new(Pawn::new(Side::Black))),
                 ],
-                [None, None, None, None, None, None, None, None],
                 [
                     None,
                     None,
+                    None,
+                    None,
+                    Some(Box::new(Pawn::new(Side::White))),
+                    None,
+                    None,
+                    None,
+                ],
+                [
+                    None,
+                    Some(Box::new(Pawn::new(Side::White))),
                     Some(Box::new(Rook { side: Side::White })),
                     None,
                     Some(Box::new(Bishop { side: Side::White })),
@@ -61,14 +70,14 @@ impl Board {
                 ],
                 [None, None, None, None, None, None, None, None],
                 [
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
-                    Some(Box::new(Pawn { side: Side::White })),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
+                    Some(Box::new(Pawn::new(Side::White))),
                 ],
                 [
                     Some(Box::new(Rook { side: Side::White })),
@@ -81,7 +90,7 @@ impl Board {
                     Some(Box::new(Rook { side: Side::White })),
                 ],
             ],
-        };
+        }
     }
 
     pub fn get_board_size(&self) -> usize {
