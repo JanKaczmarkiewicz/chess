@@ -1,3 +1,5 @@
+use std::vec;
+
 use super::super::state::PossibleMoveKind;
 use super::super::{board::Board, state::PossibleMove};
 
@@ -6,9 +8,9 @@ pub fn get_direction_possible_movies(
     (x, y): (i32, i32),
     directions: &[(i32, i32)],
 ) -> Vec<PossibleMove> {
-    let mut possible_moves = vec![];
-
     if let Some(chessman) = board.get_tile((x, y)) {
+        let mut possible_moves = vec![];
+
         for (x_mod, y_mod) in directions {
             for i in 1..board.get_board_size() {
                 let x_next = x + x_mod * i as i32;
@@ -37,7 +39,9 @@ pub fn get_direction_possible_movies(
                 }
             }
         }
+
+        return possible_moves;
     }
 
-    return possible_moves;
+    return vec![];
 }
