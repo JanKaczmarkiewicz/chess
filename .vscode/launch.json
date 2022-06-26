@@ -1,34 +1,33 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "lldb",
-        "request": "launch",
-        "name": "Debug executable",
-        "cargo": {
-          "args": ["build"],
-          "filter": {
-            "kind": "bin"
-          }
-        },
-        "args": [],
-        "cwd": "${workspaceFolder}"
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable",
+      "preLaunchTask": "build",
+      "cargo": {
+        "args": ["build"],
+        "filter": {
+          "kind": "bin"
+        }
       },
-      {
-        "type": "lldb",
-        "request": "launch",
-        "name": "Debug tests",
-        "cargo": {
-          "args": [
-            "test",
-            "--no-run",
-          ],
-          "filter": {
-            "kind": "bin"
-          }
-        },
-        "args": [],
-        "cwd": "${workspaceFolder}"
-      }
-    ]
-  }
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "name": "Debug tests",
+      "cargo": {
+        "args": ["test", "--no-run"],
+        "filter": {
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
