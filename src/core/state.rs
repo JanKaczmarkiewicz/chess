@@ -55,6 +55,25 @@ impl State {
                     Side::White => Side::Black,
                     Side::Black => Side::White,
                 };
+                self.selected_tile = None;
+                self.possible_moves = vec![];
+
+                return;
+            }
+
+            if let Some(selected_chessman) = self
+                .board
+                .get_tile((selected_tile.0 as i32, selected_tile.1 as i32))
+            {
+                if let Some(clicked_chessman) = self.board.get_tile(input) {
+                    if selected_chessman.get_side() == clicked_chessman.get_side() {
+                        self.possible_moves =
+                            clicked_chessman.get_possible_moves(&self.board, input);
+                        self.selected_tile = Some(coordinate);
+
+                        return;
+                    }
+                }
             }
 
             self.selected_tile = None;
