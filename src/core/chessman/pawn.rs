@@ -3,6 +3,7 @@ use crate::core::state::{PossibleMove, PossibleMoveKind};
 use super::super::board::Board;
 use super::super::state::Side;
 use super::chessman::{Chessman, ChessmanKind};
+use super::utils::filter_check_moves;
 
 pub struct Pawn {
     pub side: Side,
@@ -67,7 +68,7 @@ impl Chessman for Pawn {
                 }
             }
 
-            return possible_moves;
+            return filter_check_moves(board, (x, y), possible_moves);
         }
 
         vec![]

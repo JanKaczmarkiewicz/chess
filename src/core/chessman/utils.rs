@@ -40,8 +40,28 @@ pub fn get_direction_possible_movies(
             }
         }
 
-        return possible_moves;
+        return filter_check_moves(board, (x, y), possible_moves);
     }
 
     vec![]
+}
+
+pub fn filter_check_moves(
+    board: &Board,
+    (x, y): (i32, i32),
+    unfiltered_possible_moves: Vec<PossibleMove>,
+) -> Vec<PossibleMove> {
+    unfiltered_possible_moves
+        .into_iter()
+        .filter(|possible_move| {
+            let (possible_move_x, possible_move_y) = possible_move.coordinate;
+            let mut tiles = board.shallow_clone();
+
+            // inlined move
+            let from_chessman = tiles[y as usize][x as usize].take();
+            tiles[possible_move_y][possible_move_x] = from_chessman;
+
+            !Board::is_check(tiles)
+        })
+        .collect()
 }

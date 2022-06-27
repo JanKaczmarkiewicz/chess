@@ -113,4 +113,20 @@ impl Board {
             &None
         }
     }
+
+    pub fn shallow_clone(&self) -> [[Option<&Box<dyn Chessman>>; BOARD_SIZE]; BOARD_SIZE] {
+        let mut shallow = [[None; BOARD_SIZE]; BOARD_SIZE];
+
+        for (i, row) in self.tiles.iter().enumerate() {
+            for (j, cell) in row.iter().enumerate() {
+                shallow[i][j] = cell.into();
+            }
+        }
+
+        return shallow;
+    }
+
+    pub fn is_check(tiles: [[Option<&Box<dyn Chessman>>; BOARD_SIZE]; BOARD_SIZE]) -> bool {
+        false // TODO: implement
+    }
 }
