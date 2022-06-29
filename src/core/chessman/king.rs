@@ -1,65 +1,52 @@
+use crate::core::board::Tiles;
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
 use super::super::board::Board;
-use super::super::state::Side;
-use super::chessman::{Chessman, ChessmanKind};
-use super::utils::filter_check_moves;
+use super::utils::get_tile;
 
-pub struct King {
-    pub side: Side,
-}
+pub struct King {}
 
-impl Chessman for King {
-    fn get_side(&self) -> &Side {
-        &self.side
-    }
+impl King {
+    // TODO: implement conditional check logic
+    pub fn get_possible_moves(tiles: &Tiles, (x, y): (i32, i32)) -> Vec<PossibleMove> {
+        if let Some(chessman) = get_tile(tiles, (x, y)) {
+            let mut possible_moves = vec![];
 
-    fn handle_move(&mut self) {}
+            let directions = &[
+                (1, 0),
+                (0, 1),
+                (0, -1),
+                (-1, 0),
+                (1, 1),
+                (1, -1),
+                (-1, 1),
+                (-1, -1),
+            ];
 
-    fn get_kind(&self) -> ChessmanKind {
-        ChessmanKind::King
-    }
+            for (x_mod, y_mod) in directions {
+                let coordinate = (x + x_mod, y + y_mod);
 
-    // TODO: implement check logic
-    fn get_possible_moves(&self, board: &Board, (x, y): (i32, i32)) -> Vec<PossibleMove> {
-        if board.get_tile((x, y)).is_none() {
-            return vec![];
-        }
+                if !Board::is_coordinate_in_board(coordinate) {
+                    continue;
+                }
 
-        let mut possible_moves = vec![];
-
-        let directions = &[
-            (1, 0),
-            (0, 1),
-            (0, -1),
-            (-1, 0),
-            (1, 1),
-            (1, -1),
-            (-1, 1),
-            (-1, -1),
-        ];
-
-        for (x_mod, y_mod) in directions {
-            let coordinate = (x + x_mod, y + y_mod);
-
-            if !Board::is_coordinate_in_board(coordinate) {
-                continue;
-            }
-
-            if let Some(current_chessman) = board.get_tile(coordinate) {
-                if self.get_side() != current_chessman.get_side() {
+                if let Some(current_chessman) = get_tile(tiles, coordinate) {
+                    if chessman.side != current_chessman.side {
+                        possible_moves.push(PossibleMove {
+                            kind: PossibleMoveKind::Capture,
+                            coordinate: (coordinate.0 as usize, coordinate.1 as usize),
+                        });
+                    }
+                } else {
                     possible_moves.push(PossibleMove {
-                        kind: PossibleMoveKind::Capture,
+                        kind: PossibleMoveKind::Move,
                         coordinate: (coordinate.0 as usize, coordinate.1 as usize),
                     });
                 }
-            } else {
-                possible_moves.push(PossibleMove {
-                    kind: PossibleMoveKind::Move,
-                    coordinate: (coordinate.0 as usize, coordinate.1 as usize),
-                });
             }
+            return possible_moves;
         }
-        return filter_check_moves(board, (x, y), possible_moves);
+
+        vec![]
     }
 }

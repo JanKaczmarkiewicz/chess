@@ -101,12 +101,12 @@ impl Renderer {
                 }
 
                 if let Some(chessman) = tile {
-                    let side_part = match chessman.get_side() {
+                    let side_part = match chessman.side {
                         Side::White => "w",
                         Side::Black => "b",
                     };
 
-                    let chessman_part = match chessman.get_kind() {
+                    let chessman_part = match chessman.kind {
                         ChessmanKind::Bishop => "b",
                         ChessmanKind::Queen => "q",
                         ChessmanKind::King => "k",

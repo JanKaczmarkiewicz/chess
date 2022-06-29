@@ -1,28 +1,15 @@
+use crate::core::board::{Tiles, BOARD_SIZE};
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
-use super::super::board::Board;
 use super::super::state::Side;
-use super::chessman::{Chessman, ChessmanKind};
-use super::utils::filter_check_moves;
+use super::utils::get_tile;
 
-pub struct Pawn {
-    pub side: Side,
-}
+pub struct Pawn {}
 
-impl Chessman for Pawn {
-    fn handle_move(&mut self) {}
-
-    fn get_side(&self) -> &Side {
-        &self.side
-    }
-
-    fn get_kind(&self) -> ChessmanKind {
-        ChessmanKind::Pawn
-    }
-
-    fn get_possible_moves(&self, board: &Board, (x, y): (i32, i32)) -> Vec<PossibleMove> {
-        if board.get_tile((x, y)).is_some() {
-            let direction = match self.side {
+impl Pawn {
+    pub fn get_possible_moves(tiles: &Tiles, (x, y): (i32, i32)) -> Vec<PossibleMove> {
+        if let Some(chessman) = get_tile(tiles, (x, y)) {
+            let direction = match chessman.side {
                 Side::White => -1,
                 Side::Black => 1,
             };
@@ -30,8 +17,8 @@ impl Chessman for Pawn {
             let mut possible_moves = vec![];
 
             // move
-            let starting_position = match self.side {
-                Side::White => board.get_board_size() - 2,
+            let starting_position = match chessman.side {
+                Side::White => BOARD_SIZE - 2,
                 Side::Black => 1,
             };
 
@@ -44,7 +31,7 @@ impl Chessman for Pawn {
             for step in 1..=len {
                 let coordinate = (x, y + step * direction);
 
-                if board.get_tile(coordinate).is_none() {
+                if get_tile(tiles, coordinate).is_none() {
                     possible_moves.push(PossibleMove {
                         kind: PossibleMoveKind::Move,
                         coordinate: (coordinate.0 as usize, coordinate.1 as usize),
@@ -53,13 +40,11 @@ impl Chessman for Pawn {
             }
 
             // capture
-            let right_and_left = [-1, 1];
-
-            for right_or_left in right_and_left {
+            for right_or_left in [-1, 1] {
                 let coordinate = (x + right_or_left, y + direction);
 
-                if let Some(chessman) = board.get_tile(coordinate) {
-                    if chessman.get_side() != &self.side {
+                if let Some(current_chessman) = get_tile(tiles, coordinate) {
+                    if chessman.side != current_chessman.side {
                         possible_moves.push(PossibleMove {
                             kind: PossibleMoveKind::Capture,
                             coordinate: (coordinate.0 as usize, coordinate.1 as usize),
@@ -68,15 +53,9 @@ impl Chessman for Pawn {
                 }
             }
 
-            return filter_check_moves(board, (x, y), possible_moves);
+            return possible_moves;
         }
 
         vec![]
-    }
-}
-
-impl Pawn {
-    pub fn new(side: Side) -> Self {
-        Pawn { side }
     }
 }

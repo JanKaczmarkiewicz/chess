@@ -5,5 +5,4 @@ pub mod knight;
 pub mod pawn;
 pub mod queen;
 pub mod rook;
-
-mod utils;
+pub mod utils;

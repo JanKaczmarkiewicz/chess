@@ -1,6 +1,8 @@
 use super::board::{Board, Tiles};
+use super::chessman::chessman::Chessman;
+use super::chessman::utils::get_tile;
 
-#[derive(Eq, PartialEq, Clone)]
+#[derive(Eq, PartialEq, Clone, Debug)]
 pub enum Side {
     White,
     Black,
@@ -61,14 +63,14 @@ impl State {
                 return;
             }
 
-            if let Some(selected_chessman) = self
-                .board
-                .get_tile((selected_tile.0 as i32, selected_tile.1 as i32))
-            {
-                if let Some(clicked_chessman) = self.board.get_tile(input) {
-                    if selected_chessman.get_side() == clicked_chessman.get_side() {
+            if let Some(selected_chessman) = get_tile(
+                &self.board.tiles,
+                (selected_tile.0 as i32, selected_tile.1 as i32),
+            ) {
+                if let Some(clicked_chessman) = get_tile(&self.board.tiles, input) {
+                    if selected_chessman.side == clicked_chessman.side {
                         self.possible_moves =
-                            clicked_chessman.get_possible_moves(&self.board, input);
+                            Chessman::get_filtered_possible_moves(&self.board.tiles, input);
                         self.selected_tile = Some(coordinate);
 
                         return;
@@ -82,9 +84,10 @@ impl State {
             return;
         }
 
-        if let Some(chessman) = self.board.get_tile(input) {
-            if chessman.get_side() == &self.current_side {
-                self.possible_moves = chessman.get_possible_moves(&self.board, input);
+        if let Some(chessman) = get_tile(&self.board.tiles, input) {
+            if chessman.side == self.current_side {
+                self.possible_moves =
+                    Chessman::get_filtered_possible_moves(&self.board.tiles, input);
                 self.selected_tile = Some(coordinate);
 
                 return;

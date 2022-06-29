@@ -1,28 +1,12 @@
-use crate::core::state::PossibleMove;
-
-use super::super::board::Board;
-use super::super::state::Side;
-use super::chessman::{Chessman, ChessmanKind};
 use super::utils::get_direction_possible_movies;
+use crate::core::{board::Tiles, state::PossibleMove};
 
-pub struct Queen {
-    pub side: Side,
-}
+pub struct Queen {}
 
-impl Chessman for Queen {
-    fn get_side(&self) -> &Side {
-        &self.side
-    }
-
-    fn handle_move(&mut self) {}
-
-    fn get_kind(&self) -> ChessmanKind {
-        ChessmanKind::Queen
-    }
-
-    fn get_possible_moves(&self, board: &Board, position: (i32, i32)) -> Vec<PossibleMove> {
+impl Queen {
+    pub fn get_possible_moves(tiles: &Tiles, position: (i32, i32)) -> Vec<PossibleMove> {
         get_direction_possible_movies(
-            board,
+            tiles,
             position,
             &[
                 (1, 0),

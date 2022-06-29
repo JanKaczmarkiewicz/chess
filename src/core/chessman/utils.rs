@@ -1,18 +1,21 @@
 use std::vec;
 
+use crate::core::board::{Tiles, BOARD_SIZE};
+
 use super::super::state::PossibleMoveKind;
 use super::super::{board::Board, state::PossibleMove};
+use super::chessman::Chessman;
 
 pub fn get_direction_possible_movies(
-    board: &Board,
+    tiles: &Tiles,
     (x, y): (i32, i32),
     directions: &[(i32, i32)],
 ) -> Vec<PossibleMove> {
-    if let Some(chessman) = board.get_tile((x, y)) {
+    if let Some(chessman) = get_tile(tiles, (x, y)) {
         let mut possible_moves = vec![];
 
         for (x_mod, y_mod) in directions {
-            for i in 1..board.get_board_size() {
+            for i in 1..BOARD_SIZE {
                 let x_next = x + x_mod * i as i32;
                 let y_next = y + y_mod * i as i32;
 
@@ -22,8 +25,8 @@ pub fn get_direction_possible_movies(
                     break;
                 }
 
-                if let Some(current_chessman) = board.get_tile(coordinate) {
-                    if chessman.get_side() != current_chessman.get_side() {
+                if let Some(current_chessman) = get_tile(tiles, coordinate) {
+                    if chessman.side != current_chessman.side {
                         possible_moves.push(PossibleMove {
                             kind: PossibleMoveKind::Capture,
                             coordinate: (coordinate.0 as usize, coordinate.1 as usize),
@@ -40,14 +43,14 @@ pub fn get_direction_possible_movies(
             }
         }
 
-        return filter_check_moves(board, (x, y), possible_moves);
+        return possible_moves;
     }
 
     vec![]
 }
 
 pub fn filter_check_moves(
-    board: &Board,
+    tiles: &Tiles,
     (x, y): (i32, i32),
     unfiltered_possible_moves: Vec<PossibleMove>,
 ) -> Vec<PossibleMove> {
@@ -55,13 +58,29 @@ pub fn filter_check_moves(
         .into_iter()
         .filter(|possible_move| {
             let (possible_move_x, possible_move_y) = possible_move.coordinate;
-            let mut tiles = board.shallow_clone();
+            let mut tiles = tiles.clone();
 
             // inlined move
             let from_chessman = tiles[y as usize][x as usize].take();
             tiles[possible_move_y][possible_move_x] = from_chessman;
 
-            !Board::is_check(tiles)
+            let is_check = !Board::is_check(
+                &tiles,
+                &tiles[possible_move_y][possible_move_x]
+                    .clone()
+                    .unwrap()
+                    .side,
+            );
+
+            is_check
         })
         .collect()
+}
+
+pub fn get_tile(tiles: &Tiles, (x, y): (i32, i32)) -> Option<&Chessman> {
+    if Board::is_coordinate_in_board((x, y)) {
+        tiles[y as usize][x as usize].as_ref()
+    } else {
+        None
+    }
 }

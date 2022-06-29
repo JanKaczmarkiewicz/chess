@@ -1,27 +1,13 @@
+use super::super::board::Board;
+use super::utils::get_tile;
+use crate::core::board::Tiles;
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
-use super::super::board::Board;
-use super::super::state::Side;
-use super::chessman::{Chessman, ChessmanKind};
-use super::utils::filter_check_moves;
+pub struct Knight {}
 
-pub struct Knight {
-    pub side: Side,
-}
-
-impl Chessman for Knight {
-    fn handle_move(&mut self) {}
-
-    fn get_side(&self) -> &Side {
-        &self.side
-    }
-
-    fn get_kind(&self) -> ChessmanKind {
-        ChessmanKind::Knight
-    }
-
-    fn get_possible_moves(&self, board: &Board, (x, y): (i32, i32)) -> Vec<PossibleMove> {
-        if board.get_tile((x, y)).is_some() {
+impl Knight {
+    pub fn get_possible_moves(tiles: &Tiles, (x, y): (i32, i32)) -> Vec<PossibleMove> {
+        if let Some(chessman) = get_tile(tiles, (x, y)) {
             let directions = [
                 (-1, 2),
                 (-1, -2),
@@ -42,8 +28,8 @@ impl Chessman for Knight {
                     continue;
                 }
 
-                if let Some(current_chessman) = board.get_tile(pos) {
-                    if self.get_side() != current_chessman.get_side() {
+                if let Some(current_chessman) = get_tile(tiles, pos) {
+                    if chessman.side != current_chessman.side {
                         possible_moves.push(PossibleMove {
                             kind: PossibleMoveKind::Capture,
                             coordinate: (pos.0 as usize, pos.1 as usize),
@@ -57,7 +43,7 @@ impl Chessman for Knight {
                 }
             }
 
-            return filter_check_moves(board, (x, y), possible_moves);
+            return possible_moves;
         }
 
         vec![]
