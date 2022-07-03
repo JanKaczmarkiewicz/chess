@@ -1,14 +1,15 @@
 use std::vec;
 
-use crate::core::board::{Tiles, BOARD_SIZE};
+use crate::core::board::{History, Tiles, BOARD_SIZE};
 
 use super::super::state::PossibleMoveKind;
 use super::super::{board::Board, state::PossibleMove};
-use super::chessman::Chessman;
+use super::chessman::{Chessman, ChessmanKind};
 
 pub fn get_direction_possible_movies(
     tiles: &Tiles,
     (x, y): (i32, i32),
+    _history: &History,
     directions: &[(i32, i32)],
 ) -> Vec<PossibleMove> {
     if let Some(chessman) = get_tile(tiles, (x, y)) {
@@ -64,13 +65,30 @@ pub fn filter_check_moves(
             let from_chessman = tiles[y as usize][x as usize].take();
             tiles[possible_move_y][possible_move_x] = from_chessman;
 
-            let is_check = !Board::is_check(
-                &tiles,
-                &tiles[possible_move_y][possible_move_x]
-                    .clone()
-                    .unwrap()
-                    .side,
-            );
+            let side = &tiles[possible_move_y][possible_move_x]
+                .clone()
+                .unwrap()
+                .side;
+
+            let king_position = tiles
+                .iter()
+                .enumerate()
+                .find_map(|(y, row)| {
+                    row.into_iter().enumerate().find_map({
+                        |(x, tile)| {
+                            tile.as_ref().and_then(|chessman| {
+                                if &chessman.side == side && chessman.kind == ChessmanKind::King {
+                                    Some((x as usize, y as usize))
+                                } else {
+                                    None
+                                }
+                            })
+                        }
+                    })
+                })
+                .expect("There should be always a king on the board");
+
+            let is_check = !Board::is_check_at(&tiles, side, king_position);
 
             is_check
         })

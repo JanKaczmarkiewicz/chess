@@ -7,6 +7,7 @@ use super::pawn::Pawn;
 use super::queen::Queen;
 use super::rook::Rook;
 use super::utils::get_tile;
+use crate::core::board::History;
 use crate::core::board::Tiles;
 
 use super::utils::filter_check_moves;
@@ -28,20 +29,34 @@ pub struct Chessman {
 }
 
 impl Chessman {
-    pub fn get_filtered_possible_moves(tiles: &Tiles, position: (i32, i32)) -> Vec<PossibleMove> {
-        return filter_check_moves(&tiles, position, Self::get_possible_moves(&tiles, position));
+    pub fn get_no_check_possible_moves(
+        tiles: &Tiles,
+        position: (i32, i32),
+        history: &History,
+    ) -> Vec<PossibleMove> {
+        return filter_check_moves(
+            &tiles,
+            position,
+            Self::get_possible_moves(&tiles, position, history),
+        );
     }
 
-    pub fn get_possible_moves(tiles: &Tiles, position: (i32, i32)) -> Vec<PossibleMove> {
+    pub fn get_possible_moves(
+        tiles: &Tiles,
+        position: (i32, i32),
+        history: &History,
+    ) -> Vec<PossibleMove> {
         if let Some(chessman) = get_tile(tiles, position) {
-            match chessman.kind {
-                ChessmanKind::Rook => Rook::get_possible_moves(tiles, position),
-                ChessmanKind::Knight => Knight::get_possible_moves(tiles, position),
-                ChessmanKind::Bishop => Bishop::get_possible_moves(tiles, position),
-                ChessmanKind::Queen => Queen::get_possible_moves(tiles, position),
-                ChessmanKind::King => King::get_possible_moves(tiles, position),
-                ChessmanKind::Pawn => Pawn::get_possible_moves(tiles, position),
-            }
+            let get_possible_moves = match chessman.kind {
+                ChessmanKind::Rook => Rook::get_possible_moves,
+                ChessmanKind::Knight => Knight::get_possible_moves,
+                ChessmanKind::Bishop => Bishop::get_possible_moves,
+                ChessmanKind::Queen => Queen::get_possible_moves,
+                ChessmanKind::King => King::get_possible_moves,
+                ChessmanKind::Pawn => Pawn::get_possible_moves,
+            };
+
+            return get_possible_moves(tiles, position, history);
         } else {
             vec![]
         }

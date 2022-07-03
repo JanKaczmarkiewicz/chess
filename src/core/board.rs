@@ -1,3 +1,5 @@
+use std::vec;
+
 use super::{
     chessman::{chessman::Chessman, chessman::ChessmanKind},
     state::Side,
@@ -7,13 +9,24 @@ pub const BOARD_SIZE: usize = 8;
 
 pub type Tiles = [[Option<Chessman>; BOARD_SIZE]; BOARD_SIZE];
 
+pub struct MoveEntry {
+    pub chessman: Chessman,
+    pub from: (usize, usize),
+    pub to: (usize, usize),
+    pub capture: Option<Chessman>,
+}
+
+pub type History = Vec<MoveEntry>;
+
 pub struct Board {
     pub tiles: Tiles,
+    pub history: History,
 }
 
 impl Board {
     pub fn new() -> Self {
         Self {
+            history: vec![],
             tiles: [
                 [
                     Some(Chessman {
@@ -159,57 +172,50 @@ impl Board {
         }
     }
 
-    pub fn make_move(&mut self, from: (usize, usize), to: (usize, usize)) {
-        let from_chessman = self.tiles[from.1][from.0].take();
-        self.tiles[to.1][to.0] = from_chessman;
+    pub fn make_move(&mut self, from_coordinate: (usize, usize), to_coordinate: (usize, usize)) {
+        if let Some(from_chessman) = self.tiles[from_coordinate.1][from_coordinate.0].take() {
+            let from = from_chessman.clone();
+            let to_tile = self.tiles[to_coordinate.1][to_coordinate.0].take();
+
+            self.tiles[to_coordinate.1][to_coordinate.0] = Some(from_chessman);
+            self.history.push(MoveEntry {
+                chessman: from,
+                from: from_coordinate,
+                to: to_coordinate,
+                capture: to_tile,
+            });
+        }
     }
 
     pub fn is_coordinate_in_board((x, y): (i32, i32)) -> bool {
         x >= 0 && x < BOARD_SIZE as i32 && y >= 0 && y < BOARD_SIZE as i32
     }
 
-    pub fn is_check(tiles: &Tiles, side: &Side) -> bool {
-        let mut enemy_possible_moves = tiles.iter().enumerate().flat_map(|(y, row)| {
-            row.into_iter()
-                .enumerate()
-                .filter_map({
-                    let side = side.clone();
-                    move |(x, tile)| {
-                        tile.as_ref().map(|chessman| {
-                            let is_enemy = chessman.side != side;
+    pub fn is_check_at(tiles: &Tiles, side: &Side, at: (usize, usize)) -> bool {
+        for (y, row) in tiles.iter().enumerate() {
+            for (x, cell) in row.iter().enumerate() {
+                if let Some(chessman) = cell {
+                    let is_ally = &chessman.side == side;
 
-                            if is_enemy {
-                                Chessman::get_possible_moves(&tiles, (x as i32, y as i32))
-                                    .into_iter()
-                                    .map(|possible_move| possible_move.coordinate)
-                                    .collect()
-                            } else {
-                                vec![]
-                            }
-                        })
+                    if is_ally {
+                        continue;
                     }
-                })
-                .flatten()
-        });
 
-        let king_position = tiles
-            .iter()
-            .enumerate()
-            .find_map(|(y, row)| {
-                row.into_iter().enumerate().find_map({
-                    |(x, tile)| {
-                        tile.as_ref().and_then(|chessman| {
-                            if &chessman.side == side && chessman.kind == ChessmanKind::King {
-                                Some((x as usize, y as usize))
-                            } else {
-                                None
-                            }
-                        })
+                    // TODO: history
+                    let is_check =
+                        Chessman::get_possible_moves(&tiles, (x as i32, y as i32), &vec![])
+                            .iter()
+                            .any(|possible_move| possible_move.coordinate == at);
+
+                    if !is_check {
+                        continue;
                     }
-                })
-            })
-            .expect("There should be always a king on the board");
 
-        enemy_possible_moves.any(|possible_move| possible_move == king_position)
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

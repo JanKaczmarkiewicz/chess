@@ -1,4 +1,4 @@
-use crate::core::board::{Tiles, BOARD_SIZE};
+use crate::core::board::{History, Tiles, BOARD_SIZE};
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
 use super::super::state::Side;
@@ -7,7 +7,11 @@ use super::utils::get_tile;
 pub struct Pawn {}
 
 impl Pawn {
-    pub fn get_possible_moves(tiles: &Tiles, (x, y): (i32, i32)) -> Vec<PossibleMove> {
+    pub fn get_possible_moves(
+        tiles: &Tiles,
+        (x, y): (i32, i32),
+        _history: &History,
+    ) -> Vec<PossibleMove> {
         if let Some(chessman) = get_tile(tiles, (x, y)) {
             let direction = match chessman.side {
                 Side::White => -1,

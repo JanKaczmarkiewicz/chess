@@ -1,12 +1,16 @@
 use super::super::board::Board;
 use super::utils::get_tile;
-use crate::core::board::Tiles;
+use crate::core::board::{History, Tiles};
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
 pub struct Knight {}
 
 impl Knight {
-    pub fn get_possible_moves(tiles: &Tiles, (x, y): (i32, i32)) -> Vec<PossibleMove> {
+    pub fn get_possible_moves(
+        tiles: &Tiles,
+        (x, y): (i32, i32),
+        _history: &History,
+    ) -> Vec<PossibleMove> {
         if let Some(chessman) = get_tile(tiles, (x, y)) {
             let directions = [
                 (-1, 2),
@@ -21,7 +25,7 @@ impl Knight {
 
             let mut possible_moves = vec![];
 
-            for (x_mod, y_mod) in directions {
+            for (x_mod, y_mod) in directions.iter() {
                 let pos = (x + x_mod, y + y_mod);
 
                 if !Board::is_coordinate_in_board(pos) {

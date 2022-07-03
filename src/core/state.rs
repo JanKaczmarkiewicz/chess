@@ -69,8 +69,11 @@ impl State {
             ) {
                 if let Some(clicked_chessman) = get_tile(&self.board.tiles, input) {
                     if selected_chessman.side == clicked_chessman.side {
-                        self.possible_moves =
-                            Chessman::get_filtered_possible_moves(&self.board.tiles, input);
+                        self.possible_moves = Chessman::get_no_check_possible_moves(
+                            &self.board.tiles,
+                            input,
+                            &self.board.history,
+                        );
                         self.selected_tile = Some(coordinate);
 
                         return;
@@ -86,8 +89,11 @@ impl State {
 
         if let Some(chessman) = get_tile(&self.board.tiles, input) {
             if chessman.side == self.current_side {
-                self.possible_moves =
-                    Chessman::get_filtered_possible_moves(&self.board.tiles, input);
+                self.possible_moves = Chessman::get_no_check_possible_moves(
+                    &self.board.tiles,
+                    input,
+                    &self.board.history,
+                );
                 self.selected_tile = Some(coordinate);
 
                 return;
