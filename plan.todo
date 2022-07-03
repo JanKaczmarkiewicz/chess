@@ -1,0 +1,11 @@
+Tests:
+    
+
+Features:
+    ☐ history of moves (display, undo, redo)
+    ☐ progress bar (pieces left)
+    ☐ timer per player
+    ☐ sound effect
+    ☐ fix todos
+    ☐ refactor
+    ☐ checkmate
