@@ -34,11 +34,24 @@ impl Chessman {
         position: (i32, i32),
         history: &History,
     ) -> Vec<PossibleMove> {
-        return filter_check_moves(
-            &tiles,
-            position,
-            Self::get_possible_moves(&tiles, position, history),
-        );
+        if let Some(chessman) = get_tile(tiles, position) {
+            let get_possible_moves = match chessman.kind {
+                ChessmanKind::Rook => Rook::get_possible_moves,
+                ChessmanKind::Knight => Knight::get_possible_moves,
+                ChessmanKind::Bishop => Bishop::get_possible_moves,
+                ChessmanKind::Queen => Queen::get_possible_moves,
+                ChessmanKind::King => King::get_possible_moves_with_castle,
+                ChessmanKind::Pawn => Pawn::get_possible_moves,
+            };
+
+            return filter_check_moves(
+                &tiles,
+                position,
+                get_possible_moves(&tiles, position, history),
+            );
+        }
+
+        vec![]
     }
 
     pub fn get_possible_moves(

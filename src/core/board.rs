@@ -177,7 +177,33 @@ impl Board {
             let from = from_chessman.clone();
             let to_tile = self.tiles[to_coordinate.1][to_coordinate.0].take();
 
+            if from_chessman.kind == ChessmanKind::King {
+                let distance = from_coordinate.0 as i32 - to_coordinate.0 as i32;
+
+                let is_castle_move = distance.abs() == 2;
+
+                if is_castle_move {
+                    let is_queen_side_castle = distance < 0;
+
+                    let rook_from_coordinate = if is_queen_side_castle {
+                        (7, from_coordinate.1)
+                    } else {
+                        (0, from_coordinate.1)
+                    };
+
+                    let rook_to_coordinate = if is_queen_side_castle {
+                        (from_coordinate.0 + 1, from_coordinate.1)
+                    } else {
+                        (from_coordinate.0 - 1, from_coordinate.1)
+                    };
+                    let rook = self.tiles[rook_from_coordinate.1][rook_from_coordinate.0].take();
+                    self.tiles[rook_to_coordinate.1][rook_to_coordinate.0] = rook;
+                }
+            }
+
             self.tiles[to_coordinate.1][to_coordinate.0] = Some(from_chessman);
+
+            // TODO: save castle move
             self.history.push(MoveEntry {
                 chessman: from,
                 from: from_coordinate,
