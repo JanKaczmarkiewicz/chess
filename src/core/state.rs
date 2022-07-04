@@ -98,7 +98,7 @@ impl State {
                     let is_queen_side_castle = distance < 0;
 
                     let rook_from_coordinate = if is_queen_side_castle {
-                        (7, from_coordinate.1)
+                        (BOARD_SIZE - 1, from_coordinate.1)
                     } else {
                         (0, from_coordinate.1)
                     };
