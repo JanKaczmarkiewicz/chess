@@ -7,8 +7,7 @@ use super::pawn::Pawn;
 use super::queen::Queen;
 use super::rook::Rook;
 use super::utils::get_tile;
-use crate::core::board::History;
-use crate::core::board::Tiles;
+use crate::core::state::{History, Tiles};
 
 use super::utils::filter_check_moves;
 

@@ -1,6 +1,6 @@
-use super::board::{Board, Tiles};
-use super::chessman::chessman::Chessman;
+use super::chessman::chessman::{Chessman, ChessmanKind};
 use super::chessman::utils::get_tile;
+use super::initial_board::INITIAL_BOARD;
 
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub enum Side {
@@ -14,6 +14,19 @@ pub enum PossibleMoveKind {
     Capture,
 }
 
+pub const BOARD_SIZE: usize = 8;
+
+pub type Tiles = [[Option<Chessman>; BOARD_SIZE]; BOARD_SIZE];
+
+pub struct MoveEntry {
+    pub chessman: Chessman,
+    pub from: (usize, usize),
+    pub to: (usize, usize),
+    pub capture: Option<Chessman>,
+}
+
+pub type History = Vec<MoveEntry>;
+
 #[derive(Eq, PartialEq, Debug)]
 pub struct PossibleMove {
     pub kind: PossibleMoveKind,
@@ -21,24 +34,99 @@ pub struct PossibleMove {
 }
 
 pub struct State {
-    pub board: Board,
     pub selected_tile: Option<(usize, usize)>,
     pub current_side: Side,
     pub possible_moves: Vec<PossibleMove>,
+    pub tiles: Tiles,
+    pub history: History,
 }
 
 impl State {
     pub fn new() -> Self {
         Self {
+            history: vec![],
+            tiles: INITIAL_BOARD,
             current_side: Side::Black,
             selected_tile: None,
             possible_moves: vec![],
-            board: Board::new(),
+        }
+    }
+
+    pub fn is_coordinate_in_board((x, y): (i32, i32)) -> bool {
+        x >= 0 && x < BOARD_SIZE as i32 && y >= 0 && y < BOARD_SIZE as i32
+    }
+
+    pub fn is_check_at(tiles: &Tiles, side: &Side, at: (usize, usize)) -> bool {
+        for (y, row) in tiles.iter().enumerate() {
+            for (x, cell) in row.iter().enumerate() {
+                if let Some(chessman) = cell {
+                    let is_ally = &chessman.side == side;
+
+                    if is_ally {
+                        continue;
+                    }
+
+                    // TODO: history
+                    let is_check =
+                        Chessman::get_possible_moves(&tiles, (x as i32, y as i32), &vec![])
+                            .iter()
+                            .any(|possible_move| possible_move.coordinate == at);
+
+                    if !is_check {
+                        continue;
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    pub fn make_move(&mut self, from_coordinate: (usize, usize), to_coordinate: (usize, usize)) {
+        if let Some(from_chessman) = self.tiles[from_coordinate.1][from_coordinate.0].take() {
+            let from = from_chessman.clone();
+            let to_tile = self.tiles[to_coordinate.1][to_coordinate.0].take();
+
+            if from_chessman.kind == ChessmanKind::King {
+                let distance = from_coordinate.0 as i32 - to_coordinate.0 as i32;
+
+                let is_castle_move = distance.abs() == 2;
+
+                if is_castle_move {
+                    let is_queen_side_castle = distance < 0;
+
+                    let rook_from_coordinate = if is_queen_side_castle {
+                        (7, from_coordinate.1)
+                    } else {
+                        (0, from_coordinate.1)
+                    };
+
+                    let rook_to_coordinate = if is_queen_side_castle {
+                        (from_coordinate.0 + 1, from_coordinate.1)
+                    } else {
+                        (from_coordinate.0 - 1, from_coordinate.1)
+                    };
+                    let rook = self.tiles[rook_from_coordinate.1][rook_from_coordinate.0].take();
+                    self.tiles[rook_to_coordinate.1][rook_to_coordinate.0] = rook;
+                }
+            }
+
+            self.tiles[to_coordinate.1][to_coordinate.0] = Some(from_chessman);
+
+            // TODO: save castle move
+            self.history.push(MoveEntry {
+                chessman: from,
+                from: from_coordinate,
+                to: to_coordinate,
+                capture: to_tile,
+            });
         }
     }
 
     pub fn get_board(&self) -> &Tiles {
-        &self.board.tiles
+        &self.tiles
     }
 
     pub fn handle_action(&mut self, input: (i32, i32)) {
@@ -52,7 +140,7 @@ impl State {
                 .is_some();
 
             if is_possible_move {
-                self.board.make_move(selected_tile, coordinate);
+                self.make_move(selected_tile, coordinate);
                 self.current_side = match self.current_side {
                     Side::White => Side::Black,
                     Side::Black => Side::White,
@@ -64,15 +152,15 @@ impl State {
             }
 
             if let Some(selected_chessman) = get_tile(
-                &self.board.tiles,
+                &self.tiles,
                 (selected_tile.0 as i32, selected_tile.1 as i32),
             ) {
-                if let Some(clicked_chessman) = get_tile(&self.board.tiles, input) {
+                if let Some(clicked_chessman) = get_tile(&self.tiles, input) {
                     if selected_chessman.side == clicked_chessman.side {
                         self.possible_moves = Chessman::get_no_check_possible_moves(
-                            &self.board.tiles,
+                            &self.tiles,
                             input,
-                            &self.board.history,
+                            &self.history,
                         );
                         self.selected_tile = Some(coordinate);
 
@@ -87,13 +175,10 @@ impl State {
             return;
         }
 
-        if let Some(chessman) = get_tile(&self.board.tiles, input) {
+        if let Some(chessman) = get_tile(&self.tiles, input) {
             if chessman.side == self.current_side {
-                self.possible_moves = Chessman::get_no_check_possible_moves(
-                    &self.board.tiles,
-                    input,
-                    &self.board.history,
-                );
+                self.possible_moves =
+                    Chessman::get_no_check_possible_moves(&self.tiles, input, &self.history);
                 self.selected_tile = Some(coordinate);
 
                 return;

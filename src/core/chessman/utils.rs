@@ -1,10 +1,9 @@
-use std::vec;
-
-use crate::core::board::{History, Tiles, BOARD_SIZE};
-
+use super::super::state::PossibleMove;
 use super::super::state::PossibleMoveKind;
-use super::super::{board::Board, state::PossibleMove};
 use super::chessman::{Chessman, ChessmanKind};
+use crate::core::state::State;
+use crate::core::state::{History, Tiles, BOARD_SIZE};
+use std::vec;
 
 pub fn get_direction_possible_movies(
     tiles: &Tiles,
@@ -22,7 +21,7 @@ pub fn get_direction_possible_movies(
 
                 let coordinate = (x_next, y_next);
 
-                if !Board::is_coordinate_in_board(coordinate) {
+                if !State::is_coordinate_in_board(coordinate) {
                     break;
                 }
 
@@ -88,7 +87,7 @@ pub fn filter_check_moves(
                 })
                 .expect("There should be always a king on the board");
 
-            let is_check = !Board::is_check_at(&tiles, side, king_position);
+            let is_check = !State::is_check_at(&tiles, side, king_position);
 
             is_check
         })
@@ -96,7 +95,7 @@ pub fn filter_check_moves(
 }
 
 pub fn get_tile(tiles: &Tiles, (x, y): (i32, i32)) -> Option<&Chessman> {
-    if Board::is_coordinate_in_board((x, y)) {
+    if State::is_coordinate_in_board((x, y)) {
         tiles[y as usize][x as usize].as_ref()
     } else {
         None

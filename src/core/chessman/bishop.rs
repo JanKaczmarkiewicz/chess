@@ -1,8 +1,5 @@
 use super::utils::get_direction_possible_movies;
-use crate::core::{
-    board::{History, Tiles},
-    state::PossibleMove,
-};
+use crate::core::state::{History, PossibleMove, Tiles};
 
 pub struct Bishop {}
 

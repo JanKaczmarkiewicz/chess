@@ -1,7 +1,5 @@
-use super::super::board::Board;
 use super::utils::get_tile;
-use crate::core::board::{History, Tiles};
-use crate::core::state::{PossibleMove, PossibleMoveKind};
+use crate::core::state::{History, PossibleMove, PossibleMoveKind, Tiles, State};
 
 pub struct Knight {}
 
@@ -28,7 +26,7 @@ impl Knight {
             for (x_mod, y_mod) in directions.iter() {
                 let pos = (x + x_mod, y + y_mod);
 
-                if !Board::is_coordinate_in_board(pos) {
+                if !State::is_coordinate_in_board(pos) {
                     continue;
                 }
 

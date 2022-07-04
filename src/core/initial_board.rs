@@ -1,7 +1,6 @@
 use super::{
-    board::Tiles,
     chessman::chessman::{Chessman, ChessmanKind},
-    state::Side,
+    state::{Side, Tiles},
 };
 
 pub const INITIAL_BOARD: Tiles = [

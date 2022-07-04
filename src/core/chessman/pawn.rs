@@ -1,8 +1,6 @@
-use crate::core::board::{History, Tiles, BOARD_SIZE};
-use crate::core::state::{PossibleMove, PossibleMoveKind};
-
 use super::super::state::Side;
 use super::utils::get_tile;
+use crate::core::state::{History, PossibleMove, PossibleMoveKind, Tiles, BOARD_SIZE};
 
 pub struct Pawn {}
 

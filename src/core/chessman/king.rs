@@ -1,7 +1,6 @@
-use crate::core::board::{History, Tiles, BOARD_SIZE};
+use crate::core::state::{History, State, Tiles, BOARD_SIZE};
 use crate::core::state::{PossibleMove, PossibleMoveKind};
 
-use super::super::board::Board;
 use super::utils::get_tile;
 
 pub struct King {}
@@ -76,7 +75,7 @@ impl King {
 
                 let is_check_at_path = coordinates_expected_no_check
                     .iter()
-                    .any(|coordinate| Board::is_check_at(tiles, &chessman.side, *coordinate));
+                    .any(|coordinate| State::is_check_at(tiles, &chessman.side, *coordinate));
 
                 if is_check_at_path {
                     continue;
@@ -121,7 +120,7 @@ impl King {
             for (x_mod, y_mod) in directions {
                 let coordinate = (x + x_mod, y + y_mod);
 
-                if !Board::is_coordinate_in_board(coordinate) {
+                if !State::is_coordinate_in_board(coordinate) {
                     continue;
                 }
 
