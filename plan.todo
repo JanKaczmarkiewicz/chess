@@ -2,13 +2,19 @@ Tests:
     
 
 Features:
+    ☐ checkmate
+    ☐ beating in passing
+    ☐ pawn promotion
     ☐ history of moves (display, undo, redo)
-    ☐ progress bar (pieces left)
+
     ☐ timer per player
-    ☐ sound effect
     ☐ fix todos
     ☐ refactor
-    ☐ checkmate
-    ☐ pawn promotion
-    ☐ beating in passing
     ☐ improve move ui
+    ☐ ci (clippy, tests)
+    ☐ server
+    ☐ web client
+    ☐ sound effect
+    ☐ progress bar (pieces left)
+    ☐ loging
+    ☐ ci/cd
