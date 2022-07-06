@@ -46,7 +46,7 @@ impl State {
         Self {
             history: vec![],
             tiles: INITIAL_BOARD,
-            current_side: Side::Black,
+            current_side: Side::White,
             selected_tile: None,
             possible_moves: vec![],
         }
