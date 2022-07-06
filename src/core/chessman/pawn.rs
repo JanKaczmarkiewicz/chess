@@ -33,12 +33,14 @@ impl Pawn {
             for step in 1..=len {
                 let coordinate = (x, y + step * direction);
 
-                if get_tile(tiles, coordinate).is_none() {
-                    possible_moves.push(PossibleMove {
-                        kind: PossibleMoveKind::Move,
-                        coordinate: (coordinate.0 as usize, coordinate.1 as usize),
-                    });
-                };
+                if get_tile(tiles, coordinate).is_some() {
+                    break;
+                }
+
+                possible_moves.push(PossibleMove {
+                    kind: PossibleMoveKind::Move,
+                    coordinate: (coordinate.0 as usize, coordinate.1 as usize),
+                });
             }
 
             // capture
