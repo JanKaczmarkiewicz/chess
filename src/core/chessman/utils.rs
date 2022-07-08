@@ -34,12 +34,12 @@ pub fn get_direction_possible_movies(
                     }
 
                     break;
-                } else {
-                    possible_moves.push(PossibleMove {
-                        kind: PossibleMoveKind::Move,
-                        coordinate: (coordinate.0 as usize, coordinate.1 as usize),
-                    });
                 }
+
+                possible_moves.push(PossibleMove {
+                    kind: PossibleMoveKind::Move,
+                    coordinate: (coordinate.0 as usize, coordinate.1 as usize),
+                });
             }
         }
 
@@ -73,7 +73,7 @@ pub fn filter_check_moves(
                 .iter()
                 .enumerate()
                 .find_map(|(y, row)| {
-                    row.into_iter().enumerate().find_map({
+                    row.iter().enumerate().find_map({
                         |(x, tile)| {
                             tile.as_ref().and_then(|chessman| {
                                 if &chessman.side == side && chessman.kind == ChessmanKind::King {
@@ -87,9 +87,7 @@ pub fn filter_check_moves(
                 })
                 .expect("There should be always a king on the board");
 
-            let is_check = !State::is_check_at(&tiles, side, king_position);
-
-            is_check
+            !State::is_check_at(&tiles, side, king_position)
         })
         .collect()
 }

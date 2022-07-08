@@ -1,5 +1,5 @@
 use super::utils::get_tile;
-use crate::core::state::{History, PossibleMove, PossibleMoveKind, Tiles, State};
+use crate::core::state::{History, PossibleMove, PossibleMoveKind, State, Tiles};
 
 pub struct Knight {}
 
@@ -23,7 +23,7 @@ impl Knight {
 
             let mut possible_moves = vec![];
 
-            for (x_mod, y_mod) in directions.iter() {
+            for (x_mod, y_mod) in directions {
                 let pos = (x + x_mod, y + y_mod);
 
                 if !State::is_coordinate_in_board(pos) {

@@ -44,9 +44,9 @@ impl Chessman {
             };
 
             return filter_check_moves(
-                &tiles,
+                tiles,
                 position,
-                get_possible_moves(&tiles, position, history),
+                get_possible_moves(tiles, position, history),
             );
         }
 
@@ -68,7 +68,7 @@ impl Chessman {
                 ChessmanKind::Pawn => Pawn::get_possible_moves,
             };
 
-            return get_possible_moves(tiles, position, history);
+            get_possible_moves(tiles, position, history)
         } else {
             vec![]
         }

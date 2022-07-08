@@ -14,12 +14,9 @@ impl King {
         let mut possible_moves = Self::get_possible_moves(tiles, (x, y), history);
 
         if let Some(chessman) = get_tile(tiles, (x, y)) {
-            let is_king_moved = history
-                .iter()
-                .find(|entry| {
-                    entry.chessman.side == chessman.side && entry.chessman.kind == chessman.kind
-                })
-                .is_some();
+            let is_king_moved = history.iter().any(|entry| {
+                entry.chessman.side == chessman.side && entry.chessman.kind == chessman.kind
+            });
 
             if is_king_moved {
                 return possible_moves;
@@ -35,8 +32,7 @@ impl King {
             for rook_pos in initial_rooks_positions {
                 let is_rook_moved = history
                     .iter()
-                    .find(|entry| entry.from == rook_pos || entry.to == rook_pos)
-                    .is_some();
+                    .any(|entry| entry.from == rook_pos || entry.to == rook_pos);
 
                 if is_rook_moved {
                     continue;
@@ -95,7 +91,7 @@ impl King {
             }
         }
 
-        return possible_moves;
+        possible_moves
     }
 
     pub fn get_possible_moves(
