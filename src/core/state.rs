@@ -41,6 +41,12 @@ pub struct State {
     pub history: History,
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl State {
     pub fn new() -> Self {
         Self {
@@ -68,7 +74,7 @@ impl State {
 
                     // TODO: history
                     let is_check =
-                        Chessman::get_possible_moves(&tiles, (x as i32, y as i32), &vec![])
+                        Chessman::get_possible_moves(tiles, (x as i32, y as i32), &vec![])
                             .iter()
                             .any(|possible_move| possible_move.coordinate == at);
 
@@ -81,10 +87,10 @@ impl State {
             }
         }
 
-        return false;
+        false
     }
 
-    pub fn make_move(&mut self, from_coordinate: (usize, usize), to_coordinate: (usize, usize)) {
+    fn make_move(&mut self, from_coordinate: (usize, usize), to_coordinate: (usize, usize)) {
         if let Some(from_chessman) = self.tiles[from_coordinate.1][from_coordinate.0].take() {
             let from = from_chessman.clone();
             let to_tile = self.tiles[to_coordinate.1][to_coordinate.0].take();
@@ -136,8 +142,7 @@ impl State {
             let is_possible_move = self
                 .possible_moves
                 .iter()
-                .find(|x| coordinate == x.coordinate)
-                .is_some();
+                .any(|x| coordinate == x.coordinate);
 
             if is_possible_move {
                 self.make_move(selected_tile, coordinate);
