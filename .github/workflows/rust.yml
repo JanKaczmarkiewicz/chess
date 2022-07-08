@@ -15,10 +15,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Install sdl2
+
+      - name: Setup
         run: sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 
       - name: Build
-        run: cargo build --verbose
+        run: cargo build
+
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test
