@@ -1,12 +1,36 @@
 Tests:
-    
+    ✔ pawn movement @done(22-07-07 18:20)
+    ☐ pawn capture
+    ☐ beating in passing
+    ☐ pawn promotion
 
+    ☐ rook movement
+    ☐ rook capture
+
+    ☐ knight movement
+    ☐ knight capture
+
+    ☐ queen movement
+    ☐ queen capture
+
+    ☐ king movement
+    ☐ king capture
+    ☐ castle basic
+    ☐ neg castle king moved
+    ☐ neg castle rook moved
+    ☐ neg castle path check
+    ☐ checkmate
+
+    ☐ bishop movement
+    ☐ bishop capture
+    
 Features:
     ☐ checkmate
     ☐ beating in passing
     ☐ pawn promotion
     ☐ history of moves (display, undo, redo)
 
+    ☐ refactor - valid coordinate struct (validation, usize type)
     ☐ timer per player
     ☐ fix todos
     ☐ refactor
