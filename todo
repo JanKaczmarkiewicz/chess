@@ -35,10 +35,10 @@ Features:
     ☐ fix todos
     ☐ refactor
     ☐ improve move ui
-    ☐ ci (clippy, tests)
+    ✔ ci (clippy, tests, build) @done(22-07-08 22:50)
     ☐ server
     ☐ web client
     ☐ sound effect
     ☐ progress bar (pieces left)
     ☐ loging
-    ✔ ci/cd @done(22-07-08 22:47)
+    ☐ ci/cd
