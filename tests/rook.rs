@@ -22,7 +22,7 @@ fn rook_initial_move() {
 7 . ♘ ♗ ♕ ♔ ♗ ♘ ♖",
     );
 
-    state.handle_action((3, 4));
+    state.select_tile((3, 4));
 
     assert_eq!(
         state.possible_moves,
@@ -74,7 +74,7 @@ fn rook_initial_move() {
         ]
     );
 
-    state.handle_action((6, 4));
+    state.select_tile((6, 4));
 
     assert_eq!(state.possible_moves, vec![]);
     assert_eq!(
