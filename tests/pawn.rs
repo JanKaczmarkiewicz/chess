@@ -1,6 +1,6 @@
 mod common;
 
-use chess::core::state::{PossibleMove, PossibleMoveKind};
+use chess::core::state::{PossibleMove, PossibleMoveKind::Move};
 use common::{from_literal, to_literal};
 use std::vec;
 
@@ -25,11 +25,11 @@ fn pawn_initial_move() {
         state.possible_moves,
         vec![
             PossibleMove {
-                kind: PossibleMoveKind::Move,
+                kind: Move,
                 coordinate: (6, 5)
             },
             PossibleMove {
-                kind: PossibleMoveKind::Move,
+                kind: Move,
                 coordinate: (6, 4)
             }
         ]
