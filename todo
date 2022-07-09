@@ -11,8 +11,8 @@ Tests:
     ✔ knight movement @done(22-07-10 01:08)
     ✔ knight capture @done(22-07-10 01:08)
 
-    ☐ queen movement
-    ☐ queen capture
+    ✔ queen movement @done(22-07-10 01:12)
+    ✔ queen capture @done(22-07-10 01:12)
 
     ☐ king movement
     ☐ king capture
