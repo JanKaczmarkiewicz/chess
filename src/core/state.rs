@@ -135,7 +135,7 @@ impl State {
         &self.tiles
     }
 
-    pub fn handle_action(&mut self, input: (i32, i32)) {
+    pub fn select_tile(&mut self, input: (i32, i32)) {
         let coordinate = (input.0 as usize, input.1 as usize);
 
         if let Some(selected_tile) = self.selected_tile {

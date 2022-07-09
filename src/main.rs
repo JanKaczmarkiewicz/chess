@@ -11,7 +11,7 @@ fn main() -> Result<(), String> {
     renderer.update(&state)?;
 
     while let Some(input) = renderer.get_next_input() {
-        state.handle_action(input);
+        state.select_tile(input);
         renderer.update(&state)?;
     }
 

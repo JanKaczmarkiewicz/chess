@@ -1,6 +1,12 @@
 use chess::core::{
-    chessman::chessman::{Chessman, ChessmanKind},
-    state::{Side, State, Tiles},
+    chessman::chessman::{
+        Chessman,
+        ChessmanKind::{Bishop, King, Knight, Pawn, Queen, Rook},
+    },
+    state::{
+        Side::{Black, White},
+        State, Tiles,
+    },
 };
 
 pub fn from_literal(literal: &str) -> State {
@@ -21,52 +27,52 @@ pub fn from_literal(literal: &str) -> State {
                 .for_each(|(x, c)| {
                     tiles[y][x] = match c {
                         '♜' => Some(Chessman {
-                            kind: ChessmanKind::Rook,
-                            side: Side::Black,
+                            kind: Rook,
+                            side: Black,
                         }),
                         '♞' => Some(Chessman {
-                            kind: ChessmanKind::Knight,
-                            side: Side::Black,
+                            kind: Knight,
+                            side: Black,
                         }),
                         '♝' => Some(Chessman {
-                            kind: ChessmanKind::Bishop,
-                            side: Side::Black,
+                            kind: Bishop,
+                            side: Black,
                         }),
                         '♛' => Some(Chessman {
-                            kind: ChessmanKind::Queen,
-                            side: Side::Black,
+                            kind: Queen,
+                            side: Black,
                         }),
                         '♚' => Some(Chessman {
-                            kind: ChessmanKind::King,
-                            side: Side::Black,
+                            kind: King,
+                            side: Black,
                         }),
                         '♟' => Some(Chessman {
-                            kind: ChessmanKind::Pawn,
-                            side: Side::Black,
+                            kind: Pawn,
+                            side: Black,
                         }),
                         '♖' => Some(Chessman {
-                            kind: ChessmanKind::Rook,
-                            side: Side::White,
+                            kind: Rook,
+                            side: White,
                         }),
                         '♘' => Some(Chessman {
-                            kind: ChessmanKind::Knight,
-                            side: Side::White,
+                            kind: Knight,
+                            side: White,
                         }),
                         '♗' => Some(Chessman {
-                            kind: ChessmanKind::Bishop,
-                            side: Side::White,
+                            kind: Bishop,
+                            side: White,
                         }),
                         '♕' => Some(Chessman {
-                            kind: ChessmanKind::Queen,
-                            side: Side::White,
+                            kind: Queen,
+                            side: White,
                         }),
                         '♔' => Some(Chessman {
-                            kind: ChessmanKind::King,
-                            side: Side::White,
+                            kind: King,
+                            side: White,
                         }),
                         '♙' => Some(Chessman {
-                            kind: ChessmanKind::Pawn,
-                            side: Side::White,
+                            kind: Pawn,
+                            side: White,
                         }),
                         _ => None,
                     };
@@ -91,21 +97,21 @@ pub fn to_literal(state: &State) -> String {
                     .enumerate()
                     .map(|(_x, cell)| match cell {
                         Some(chessman) => match chessman.side {
-                            Side::Black => match chessman.kind {
-                                ChessmanKind::Rook => "♜",
-                                ChessmanKind::Knight => "♞",
-                                ChessmanKind::Bishop => "♝",
-                                ChessmanKind::Queen => "♛",
-                                ChessmanKind::King => "♚",
-                                ChessmanKind::Pawn => "♟",
+                            Black => match chessman.kind {
+                                Rook => "♜",
+                                Knight => "♞",
+                                Bishop => "♝",
+                                Queen => "♛",
+                                King => "♚",
+                                Pawn => "♟",
                             },
-                            Side::White => match chessman.kind {
-                                ChessmanKind::Rook => "♖",
-                                ChessmanKind::Knight => "♘",
-                                ChessmanKind::Bishop => "♗",
-                                ChessmanKind::Queen => "♕",
-                                ChessmanKind::King => "♔",
-                                ChessmanKind::Pawn => "♙",
+                            White => match chessman.kind {
+                                Rook => "♖",
+                                Knight => "♘",
+                                Bishop => "♗",
+                                Queen => "♕",
+                                King => "♔",
+                                Pawn => "♙",
                             },
                         },
                         None => ".",
