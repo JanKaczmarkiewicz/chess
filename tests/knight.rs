@@ -16,71 +16,29 @@ fn basic_move() {
 1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
 2 . . . . . . . .
 3 . . . . . . . .
-4 . . . . . . ♙ .
-5 . . . . . . . .
-6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
-7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖",
-    );
-
-    state.select_tile((6, 4));
-
-    assert_eq!(
-        state.possible_moves,
-        vec![PossibleMove {
-            kind: Move,
-            coordinate: (6, 3)
-        },]
-    );
-
-    state.select_tile((6, 3));
-
-    assert_eq!(
-        to_literal(&state),
-        "
-  0 1 2 3 4 5 6 7
-0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
-1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
-2 . . . . . . . .
-3 . . . . . . ♙ .
-4 . . . . . . . .
-5 . . . . . . . .
-6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
-7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖"
-    );
-}
-
-#[test]
-fn initial_move() {
-    let mut state = from_literal(
-        "
-  0 1 2 3 4 5 6 7
-0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
-1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
-2 . . . . . . . .
-3 . . . . . . . .
 4 . . . . . . . .
 5 . . . . . . . .
 6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
 7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖",
     );
 
-    state.select_tile((6, 6));
+    state.select_tile((1, 7));
 
     assert_eq!(
         state.possible_moves,
         vec![
             PossibleMove {
                 kind: Move,
-                coordinate: (6, 5)
+                coordinate: (0, 5)
             },
             PossibleMove {
                 kind: Move,
-                coordinate: (6, 4)
+                coordinate: (2, 5)
             },
         ]
     );
 
-    state.select_tile((6, 4));
+    state.select_tile((2, 5));
 
     assert_eq!(
         to_literal(&state),
@@ -90,10 +48,10 @@ fn initial_move() {
 1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
 2 . . . . . . . .
 3 . . . . . . . .
-4 . . . . . . ♙ .
-5 . . . . . . . .
-6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
-7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖"
+4 . . . . . . . .
+5 . . ♘ . . . . .
+6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
+7 ♖ . ♗ ♕ ♔ ♗ ♘ ♖"
     );
 }
 
@@ -105,47 +63,58 @@ fn capture() {
 0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
 1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
 2 . . . . . . . .
-3 . . . . . . . .
+3 . ♘ . . . . . .
 4 . . . . . . . .
-5 . . . . . ♟ . .
+5 . . . . . . . .
 6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
-7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖",
+7 ♖ . ♗ ♕ ♔ ♗ ♘ ♖",
     );
 
-    state.select_tile((6, 6));
+    state.select_tile((1, 3));
 
     assert_eq!(
         state.possible_moves,
         vec![
             PossibleMove {
                 kind: Move,
-                coordinate: (6, 5)
-            },
-            PossibleMove {
-                kind: Move,
-                coordinate: (6, 4)
+                coordinate: (0, 5)
             },
             PossibleMove {
                 kind: Capture,
-                coordinate: (5, 5)
+                coordinate: (0, 1)
             },
+            PossibleMove {
+                kind: Move,
+                coordinate: (2, 5)
+            },
+            PossibleMove {
+                kind: Capture,
+                coordinate: (2, 1)
+            },
+            PossibleMove {
+                kind: Move,
+                coordinate: (3, 4)
+            },
+            PossibleMove {
+                kind: Move,
+                coordinate: (3, 2)
+            }
         ]
     );
 
-    state.select_tile((5, 5));
+    state.select_tile((2, 1));
 
-    assert_eq!(state.possible_moves, vec![]);
     assert_eq!(
         to_literal(&state),
         "
   0 1 2 3 4 5 6 7
 0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
-1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+1 ♟ ♟ ♘ ♟ ♟ ♟ ♟ ♟
 2 . . . . . . . .
 3 . . . . . . . .
 4 . . . . . . . .
-5 . . . . . ♙ . .
-6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
-7 ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖"
+5 . . . . . . . .
+6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
+7 ♖ . ♗ ♕ ♔ ♗ ♘ ♖"
     );
 }
