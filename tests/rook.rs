@@ -8,7 +8,7 @@ use common::{from_literal, to_literal};
 use std::vec;
 
 #[test]
-fn rook_initial_move() {
+fn basic_move() {
     let mut state = from_literal(
         "
   0 1 2 3 4 5 6 7
@@ -76,7 +76,6 @@ fn rook_initial_move() {
 
     state.select_tile((6, 4));
 
-    assert_eq!(state.possible_moves, vec![]);
     assert_eq!(
         to_literal(&state),
         "
@@ -86,6 +85,39 @@ fn rook_initial_move() {
 2 . . . . . . . .
 3 . . . . . . . .
 4 . . . . . . ♖ .
+5 . . . . . . . .
+6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
+7 . ♘ ♗ ♕ ♔ ♗ ♘ ♖"
+    );
+}
+
+#[test]
+fn capture() {
+    let mut state = from_literal(
+        "
+  0 1 2 3 4 5 6 7
+0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+2 . . . . . . . .
+3 . . . . . . . .
+4 . . . ♖ . . . .
+5 . . . . . . . .
+6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
+7 . ♘ ♗ ♕ ♔ ♗ ♘ ♖",
+    );
+
+    state.select_tile((3, 4));
+    state.select_tile((3, 1));
+
+    assert_eq!(
+        to_literal(&state),
+        "
+  0 1 2 3 4 5 6 7
+0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+1 ♟ ♟ ♟ ♖ ♟ ♟ ♟ ♟
+2 . . . . . . . .
+3 . . . . . . . .
+4 . . . . . . . .
 5 . . . . . . . .
 6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
 7 . ♘ ♗ ♕ ♔ ♗ ♘ ♖"
