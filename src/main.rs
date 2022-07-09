@@ -6,7 +6,7 @@ use render::Renderer;
 
 fn main() -> Result<(), String> {
     let mut renderer = Renderer::new()?;
-    let mut state = State::new();
+    let mut state = State::default();
 
     renderer.update(&state)?;
 

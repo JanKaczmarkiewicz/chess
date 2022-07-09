@@ -43,18 +43,18 @@ pub struct State {
 
 impl Default for State {
     fn default() -> Self {
-        Self::new()
+        Self::new(INITIAL_BOARD)
     }
 }
 
 impl State {
-    pub fn new() -> Self {
+    pub fn new(tiles: Tiles) -> Self {
         Self {
-            history: vec![],
-            tiles: INITIAL_BOARD,
             current_side: Side::White,
-            selected_tile: None,
+            history: vec![],
             possible_moves: vec![],
+            selected_tile: None,
+            tiles,
         }
     }
 
