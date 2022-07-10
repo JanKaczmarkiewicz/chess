@@ -22,8 +22,8 @@ Tests:
     ☐ neg castle path check
     ☐ checkmate
 
-    ☐ bishop movement
-    ☐ bishop capture
+    ✔ bishop movement @done(22-07-10 09:48)
+    ✔ bishop capture @done(22-07-10 09:48)
     
 Features:
     ☐ checkmate
