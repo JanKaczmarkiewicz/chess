@@ -9,3 +9,6 @@ edition = "2021"
 version = "*"
 default-features = false
 features = ["image"]
+
+[dependencies.pretty_assertions]
+version = "*"

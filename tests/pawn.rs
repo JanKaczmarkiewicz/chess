@@ -5,6 +5,7 @@ use chess::core::state::{
     PossibleMoveKind::{Capture, Move},
 };
 use common::{from_literal, to_literal};
+use pretty_assertions::assert_eq;
 use std::vec;
 
 #[test]
