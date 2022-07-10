@@ -18,7 +18,8 @@ pub fn from_literal(literal: &str) -> State {
         .skip(1)
         .enumerate()
         .for_each(|(y, line)| {
-            line.chars()
+            line.trim()
+                .chars()
                 .skip(1)
                 .enumerate()
                 .filter(|(x, _c)| x % 2 == 1)
@@ -83,46 +84,49 @@ pub fn from_literal(literal: &str) -> State {
 }
 
 pub fn to_literal(state: &State) -> String {
-    let mut literal = String::from("\n  0 1 2 3 4 5 6 7\n");
+    let mut literal = String::from("\n          0 1 2 3 4 5 6 7\n");
 
     let rows = state
         .tiles
         .iter()
         .enumerate()
         .map(|(y, row)| {
-            y.to_string()
-                + " "
-                + &row
-                    .iter()
-                    .enumerate()
-                    .map(|(_x, cell)| match cell {
-                        Some(chessman) => match chessman.side {
-                            Black => match chessman.kind {
-                                Rook => "♜",
-                                Knight => "♞",
-                                Bishop => "♝",
-                                Queen => "♛",
-                                King => "♚",
-                                Pawn => "♟",
-                            },
-                            White => match chessman.kind {
-                                Rook => "♖",
-                                Knight => "♘",
-                                Bishop => "♗",
-                                Queen => "♕",
-                                King => "♔",
-                                Pawn => "♙",
-                            },
+            let number = y.to_string();
+            let row = &row
+                .iter()
+                .enumerate()
+                .map(|(_x, cell)| match cell {
+                    Some(chessman) => match chessman.side {
+                        Black => match chessman.kind {
+                            Rook => "♜",
+                            Knight => "♞",
+                            Bishop => "♝",
+                            Queen => "♛",
+                            King => "♚",
+                            Pawn => "♟",
                         },
-                        None => ".",
-                    })
-                    .collect::<Vec<_>>()
-                    .join(" ")
+                        White => match chessman.kind {
+                            Rook => "♖",
+                            Knight => "♘",
+                            Bishop => "♗",
+                            Queen => "♕",
+                            King => "♔",
+                            Pawn => "♙",
+                        },
+                    },
+                    None => ".",
+                })
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            format!("        {number} {row}")
         })
         .collect::<Vec<_>>()
         .join("\n");
 
     literal.push_str(rows.as_str());
+
+    literal.push_str("\n        ");
 
     literal
 }
