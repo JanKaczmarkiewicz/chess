@@ -16,16 +16,16 @@ Tests:
 
     ✔ king movement @done(22-07-13 22:08)
     ✔ king capture @done(22-07-13 22:08)
-    ☐ left castle
+    ✔ left castle @done(22-07-13 23:15)
         ✔ basic @done(22-07-13 22:21)
         ✔ neg castle king moved @done(22-07-13 22:42)
         ✔ neg castle rook moved @done(22-07-13 23:01)
-        ☐ neg castle path check
-    ☐ right castle
+        ✔ neg castle path check @done(22-07-13 23:15)
+    ✔ right castle @done(22-07-13 23:15)
         ✔ basic @done(22-07-13 22:21)
         ✔ neg castle king moved @done(22-07-13 22:42)
         ✔ neg castle rook moved @done(22-07-13 23:01)
-        ☐ neg castle path check
+        ✔ neg castle path check @done(22-07-13 23:15)
 
     ✔ bishop movement @done(22-07-10 09:48)
     ✔ bishop capture @done(22-07-10 09:48)
