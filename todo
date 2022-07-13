@@ -17,12 +17,12 @@ Tests:
     ✔ king movement @done(22-07-13 22:08)
     ✔ king capture @done(22-07-13 22:08)
     ☐ left castle
-        ☐ basic
+        ✔ basic @done(22-07-13 22:21)
         ☐ neg castle king moved
         ☐ neg castle rook moved
         ☐ neg castle path check
     ☐ right castle
-        ☐ basic
+        ✔ basic @done(22-07-13 22:21)
         ☐ neg castle king moved
         ☐ neg castle rook moved
         ☐ neg castle path check
@@ -38,15 +38,15 @@ Features:
     ☐ pawn promotion
     ☐ history of moves (display, undo, redo)
 
-    ☐ refactor - valid coordinate struct (validation, usize type)
     ☐ timer per player
     ☐ fix todos
     ☐ refactor
+        ☐ valid coordinate struct (validation, usize type)
     ☐ improve move ui
     ✔ ci (clippy, tests, build) @done(22-07-08 22:50)
     ☐ server
     ☐ web client
     ☐ sound effect
     ☐ progress bar (pieces left)
-    ☐ loging
+    ☐ logging
     ☐ ci/cd
