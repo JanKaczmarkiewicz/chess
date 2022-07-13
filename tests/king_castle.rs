@@ -91,6 +91,41 @@ fn castle_left_king_moved() {
 }
 
 #[test]
+fn castle_left_path_check() {
+    let mut state = from_literal(
+        "
+          0 1 2 3 4 5 6 7
+        0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+        1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+        2 . . . . . . . .
+        3 . . ♛ . . . . .
+        4 . . . . . . . .
+        5 . . . . . . . .
+        6 ♙ ♙ . ♙ ♙ ♙ ♙ ♙
+        7 ♖ . . . ♔ ♗ ♘ ♖
+        ",
+    );
+
+    state.select_tile((4, 7));
+    state.select_tile((2, 7));
+
+    assert_eq!(
+        to_literal(&state),
+        "
+          0 1 2 3 4 5 6 7
+        0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+        1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+        2 . . . . . . . .
+        3 . . ♛ . . . . .
+        4 . . . . . . . .
+        5 . . . . . . . .
+        6 ♙ ♙ . ♙ ♙ ♙ ♙ ♙
+        7 ♖ . . . ♔ ♗ ♘ ♖
+        "
+    );
+}
+
+#[test]
 fn castle_left_rook_moved() {
     let mut state = from_literal(
         "
@@ -173,6 +208,41 @@ fn castle_right() {
         5 . . . . . . . .
         6 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
         7 ♖ ♘ ♗ ♕ . ♖ ♔ .
+        "
+    );
+}
+
+#[test]
+fn castle_right_path_check() {
+    let mut state = from_literal(
+        "
+          0 1 2 3 4 5 6 7
+        0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+        1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+        2 . . . . . . . .
+        3 . . . . . . ♛ .
+        4 . . . . . . . .
+        5 . . . . . . . .
+        6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
+        7 ♖ ♘ ♗ ♕ ♔ . . ♖
+        ",
+    );
+
+    state.select_tile((4, 7));
+    state.select_tile((6, 7));
+
+    assert_eq!(
+        to_literal(&state),
+        "
+          0 1 2 3 4 5 6 7
+        0 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+        1 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+        2 . . . . . . . .
+        3 . . . . . . ♛ .
+        4 . . . . . . . .
+        5 . . . . . . . .
+        6 ♙ ♙ ♙ ♙ ♙ ♙ . ♙
+        7 ♖ ♘ ♗ ♕ ♔ . . ♖
         "
     );
 }
