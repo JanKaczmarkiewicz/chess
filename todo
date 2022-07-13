@@ -18,12 +18,12 @@ Tests:
     ✔ king capture @done(22-07-13 22:08)
     ☐ left castle
         ✔ basic @done(22-07-13 22:21)
-        ☐ neg castle king moved
+        ✔ neg castle king moved @done(22-07-13 22:42)
         ☐ neg castle rook moved
         ☐ neg castle path check
     ☐ right castle
         ✔ basic @done(22-07-13 22:21)
-        ☐ neg castle king moved
+        ✔ neg castle king moved @done(22-07-13 22:42)
         ☐ neg castle rook moved
         ☐ neg castle path check
 
