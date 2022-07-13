@@ -14,16 +14,23 @@ Tests:
     ✔ queen movement @done(22-07-10 01:12)
     ✔ queen capture @done(22-07-10 01:12)
 
-    ☐ king movement
-    ☐ king capture
-    ☐ castle basic
-    ☐ neg castle king moved
-    ☐ neg castle rook moved
-    ☐ neg castle path check
-    ☐ checkmate
+    ✔ king movement @done(22-07-13 22:08)
+    ✔ king capture @done(22-07-13 22:08)
+    ☐ left castle
+        ☐ basic
+        ☐ neg castle king moved
+        ☐ neg castle rook moved
+        ☐ neg castle path check
+    ☐ right castle
+        ☐ basic
+        ☐ neg castle king moved
+        ☐ neg castle rook moved
+        ☐ neg castle path check
 
     ✔ bishop movement @done(22-07-10 09:48)
     ✔ bishop capture @done(22-07-10 09:48)
+
+    ☐ checkmate
     
 Features:
     ☐ checkmate
