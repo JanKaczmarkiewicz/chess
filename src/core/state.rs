@@ -58,6 +58,31 @@ impl State {
         }
     }
 
+    pub fn is_checkmate(&self) -> bool {
+        let ally_chessmans = self.tiles.iter().enumerate().filter_map(|(y, row)| {
+            for (x, tile) in row.iter().enumerate() {
+                if let Some(chessman) = tile {
+                    if chessman.side == self.current_side {
+                        return Some((x, y));
+                    }
+                }
+            }
+            None
+        });
+
+        for (x, y) in ally_chessmans {
+            let ally_chessamans =
+                Chessman::get_no_check_possible_moves(&self.tiles, (x as i32, y as i32), &vec![]);
+            let is_empty = ally_chessamans.is_empty();
+
+            if !is_empty {
+                return false;
+            }
+        }
+
+        true
+    }
+
     pub fn is_coordinate_in_board((x, y): (i32, i32)) -> bool {
         x >= 0 && x < BOARD_SIZE as i32 && y >= 0 && y < BOARD_SIZE as i32
     }

@@ -54,6 +54,19 @@ impl Renderer {
         self.canvas.set_draw_color(Color::RGB(19, 16, 17));
         self.canvas.clear();
 
+        if state.is_checkmate() {
+            self.canvas.present();
+
+            let winner = if state.current_side == Side::White {
+                "Black"
+            } else {
+                "White"
+            };
+
+            println!("Checkmate {winner}!");
+            return Ok(());
+        }
+
         let height = self.canvas.viewport().height();
         let width = self.canvas.viewport().width();
 

@@ -33,11 +33,10 @@ Tests:
     ☐ checkmate
     
 Features:
-    ☐ checkmate
+    ✔ checkmate @done(22-07-15 08:08)
     ☐ beating in passing
     ☐ pawn promotion
     ☐ history of moves (display, undo, redo)
-
     ☐ timer per player
     ☐ fix todos
     ☐ refactor
