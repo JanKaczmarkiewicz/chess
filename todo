@@ -30,7 +30,7 @@ Tests:
     ✔ bishop movement @done(22-07-10 09:48)
     ✔ bishop capture @done(22-07-10 09:48)
 
-    ☐ checkmate
+    ✔ checkmate @done(22-08-20 13:24)
     
 Features:
     ✔ checkmate @done(22-07-15 08:08)
